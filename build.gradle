@@ -67,6 +67,8 @@ dependencies {
 
     console "org.grails:grails-console"
 
+    testCompile "org.grails.plugins:hibernate"
+
 
         String restletVersion = '2.1.4'
         String jerseyVersion = '1.19'
@@ -152,8 +154,8 @@ dependencies {
         compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.4.5'
         compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.4.5'
 
-        
 }
+
 
 task wrapper(type: Wrapper) {
     gradleVersion = gradleWrapperVersion

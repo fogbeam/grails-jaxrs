@@ -222,5 +222,9 @@ public class JaxrsContext {
         public String getServletName() {
             return SERVLET_NAME;
         }
+
+        public String toString() {
+            return "extraPaths: "+jaxrsProviderExtraPaths+" initParameters: "+params.toString()+" servletName: "+SERVLET_NAME;
+        }
     }
 }

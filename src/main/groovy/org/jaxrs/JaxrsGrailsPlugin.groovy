@@ -132,6 +132,9 @@ Apache Wink are likely to be added in upcoming versions of the plugin.
      */
     Closure doWithSpring() {{ ->
         println "Loading JAXRS..."
+
+        dispatcherServletBeanPostProcessor(JaxrsFilter.DispatcherServletBeanPostProcessor);
+
         jaxrsListener(ServletListenerRegistrationBean) {
             listener = bean(JaxrsListener)
             order = Ordered.LOWEST_PRECEDENCE
@@ -139,7 +142,7 @@ Apache Wink are likely to be added in upcoming versions of the plugin.
 
         jaxrsFilter(FilterRegistrationBean) {
             filter = bean(JaxrsFilter)
-            order = Ordered.HIGHEST_PRECEDENCE
+            order = Ordered.HIGHEST_PRECEDENCE+10
         }
 
         // Configure the JAX-RS context
@@ -266,6 +269,7 @@ Apache Wink are likely to be added in upcoming versions of the plugin.
     }
 
     private Map<String, String> getProviderInitParameters(application) {
-        application.config.org.grails.jaxrs.provider.init.parameters
+        ConfigObject config = application.config.org.grails.jaxrs.provider.init.parameters
+        return config.flatten();
     }
 }

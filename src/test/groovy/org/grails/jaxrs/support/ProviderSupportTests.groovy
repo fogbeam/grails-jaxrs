@@ -24,7 +24,7 @@ import javax.ws.rs.core.MultivaluedMap
 /**
  * @author Martin Krasser
  */
-class ProviderSupportTestCase extends GroovyTestCase {
+class ProviderSupportTestCase {
 
     ProviderSupport providerA
     ProviderSupport providerB

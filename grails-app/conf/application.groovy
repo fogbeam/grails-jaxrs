@@ -130,3 +130,7 @@ environments {
 }
 
 
+org.grails.jaxrs.url.mappings = ['']
+
+
+
