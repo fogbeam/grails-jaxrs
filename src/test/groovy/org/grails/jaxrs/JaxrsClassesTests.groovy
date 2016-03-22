@@ -13,19 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.jaxrs
+package org.grails.plugins.jaxrs
 
 import grails.test.mixin.TestMixin
 import grails.test.mixin.support.GrailsUnitTestMixin
 
-import org.grails.jaxrs.test.TestA
-import org.grails.jaxrs.test.TestB
-import org.grails.jaxrs.test.TestC
-import org.grails.jaxrs.test.TestD
-import org.grails.jaxrs.test.TestE
-import org.grails.jaxrs.test.TestH1B
-import org.grails.jaxrs.test.TestH2B
-import org.grails.jaxrs.test.TestH3B
+import org.grails.plugins.jaxrs.test.TestA
+import org.grails.plugins.jaxrs.test.TestB
+import org.grails.plugins.jaxrs.test.TestC
+import org.grails.plugins.jaxrs.test.TestD
+import org.grails.plugins.jaxrs.test.TestE
+import org.grails.plugins.jaxrs.test.TestH1B
+import org.grails.plugins.jaxrs.test.TestH2B
+import org.grails.plugins.jaxrs.test.TestH3B
+import org.grails.plugins.jaxrs.JaxrsClasses
 import spock.lang.Specification
 
 /**
