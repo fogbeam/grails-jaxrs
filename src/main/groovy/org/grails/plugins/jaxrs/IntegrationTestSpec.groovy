@@ -1,8 +1,7 @@
-package org.grails.plugins.jaxrs.itest
+package org.grails.plugins.jaxrs
 
 import grails.test.mixin.integration.Integration
 import grails.transaction.Rollback
-import org.grails.plugins.jaxrs.JaxrsController
 import spock.lang.Shared
 import spock.lang.Specification
 

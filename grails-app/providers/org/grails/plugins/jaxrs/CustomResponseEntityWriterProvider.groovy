@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010 the original author or authors.
+ * Copyright 2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.jaxrs.test
+package org.grails.plugins.jaxrs
 
-import javax.ws.rs.GET
-import javax.ws.rs.Path
+import org.grails.plugins.jaxrs.support.MessageBodyWriterSupport
+import org.grails.plugins.jaxrs.test.CustomResponseEntity
+
 import javax.ws.rs.Produces
+import javax.ws.rs.core.MultivaluedMap
+import javax.ws.rs.ext.Provider
 
 /**
  * @author Martin Krasser
  */
-@Path('/test/05')
-class TestResource05 {
-
-    @GET
-    @Produces('text/html')
-    String test() {
-        '<html><body>test05</body></html>'
-    }
+@Provider
+@Produces('text/plain')
+class CustomResponseEntityWriterProvider extends MessageBodyWriterSupport<CustomResponseEntity> {
+     void writeTo(CustomResponseEntity entity, MultivaluedMap httpHeaders, OutputStream entityStream) {
+         entityStream << entity.content
+     }
 }

@@ -13,27 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.jaxrs.test
+package org.grails.plugins.jaxrs
 
-import grails.converters.XML
+import grails.test.mixin.integration.Integration
 
-import javax.ws.rs.Consumes
-import javax.ws.rs.POST
-import javax.ws.rs.Path
-import javax.ws.rs.Produces
 /**
- * @author Martin Krasser
+ * @author Noam Y. Tenne
  */
-@Path('/test/06')
-class TestResource06 {
-
-    @POST
-    @Consumes('application/json')
-    @Produces('application/xml')
-    XML testPerson(Map params) {
-        def person = new TestPerson(params)
-        person.name = person.name.reverse()
-        person.age = person.age + 1
-        person as XML
-    }
+@Integration
+class JerseyControllerIntegrationSpec extends JaxrsControllerIntegrationSpec {
 }

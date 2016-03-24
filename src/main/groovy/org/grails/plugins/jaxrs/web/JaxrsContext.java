@@ -161,7 +161,7 @@ public class JaxrsContext {
             System.setProperty(
                     "javax.ws.rs.ext.RuntimeDelegate",
                     "com.sun.jersey.server.impl.provider.RuntimeDelegateImpl");
-            init(new JerseyServlet());
+            init(new JerseyServlet(jaxrsConfig));
         } else {
             throw new ServletException("Illegal provider name: " + jaxrsProviderName + ". either use "
                     + JAXRS_PROVIDER_NAME_JERSEY + " or "

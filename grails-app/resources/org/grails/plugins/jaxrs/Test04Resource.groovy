@@ -13,15 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.jaxrs.test
+package org.grails.plugins.jaxrs
+
+import org.grails.plugins.jaxrs.test.TestPerson
 
 import javax.ws.rs.*
+
 /**
  * @author Martin Krasser
  */
 @Path('/test/04')
-class TestResource04 {
-
+class Test04Resource {
     @POST
     @Path('/single')
     @Consumes(['application/json', 'application/xml'])
@@ -54,7 +56,9 @@ class TestResource04 {
     }
 
     private createPersonList() {
-        [new TestPerson(name: 'n1', age: 1),
-                new TestPerson(name: 'n2', age: 2)]
+        return [
+            new TestPerson(name: 'n1', age: 1),
+            new TestPerson(name: 'n2', age: 2)
+        ]
     }
 }

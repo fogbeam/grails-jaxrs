@@ -13,14 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.jaxrs.web;
+package org.grails.plugins.jaxrs.web
 
-import com.sun.jersey.spi.spring.container.servlet.SpringServlet;
-import org.grails.plugins.jaxrs.web.JaxrsContext.Config;
+import com.sun.jersey.api.core.DefaultResourceConfig
+import com.sun.jersey.api.core.ResourceConfig
+import com.sun.jersey.spi.container.servlet.WebConfig
+import com.sun.jersey.spi.spring.container.servlet.SpringServlet
+import org.grails.plugins.jaxrs.web.JaxrsContext.Config
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.ws.rs.ext.Provider;
+import javax.servlet.ServletConfig
+import javax.servlet.ServletException
+import javax.ws.rs.ext.Provider
 
 /**
  * Servlet that dispatches JAX-RS requests to Jersey.
@@ -31,7 +34,13 @@ import javax.ws.rs.ext.Provider;
 @SuppressWarnings("serial")
 public class JerseyServlet extends SpringServlet {
 
-    private static final String PROVIDER_EXTRA_PATHS_KEY = "com.sun.jersey.config.property.packages";
+    private static final String PROVIDER_EXTRA_PATHS_KEY = "com.sun.jersey.config.property.packages"
+
+    private JaxrsConfig jaxrsConfig
+
+    JerseyServlet(JaxrsConfig jaxrsConfig) {
+        this.jaxrsConfig = jaxrsConfig
+    }
 
     /**
      * Initializes the Jersey servlet. If <code>config</code> is an instance of
@@ -42,11 +51,11 @@ public class JerseyServlet extends SpringServlet {
      * @see Config#getJaxrsProviderExtraPaths()
      */
     @Override
-    public void init(ServletConfig servletConfig) throws ServletException {
+    void init(ServletConfig servletConfig) throws ServletException {
         if (servletConfig instanceof Config) {
-            init((Config) servletConfig);
+            init((Config) servletConfig)
         }
-        super.init(servletConfig);
+        super.init(servletConfig)
     }
 
     /**
@@ -58,13 +67,18 @@ public class JerseyServlet extends SpringServlet {
      * @see Config#getJaxrsProviderExtraPaths()
      */
     void init(Config config) {
-        String extra = config.getJaxrsProviderExtraPaths();
+        String extra = config.getJaxrsProviderExtraPaths()
         if (isExtraPathsDefined(extra) && !config.getInitParameters().containsKey(PROVIDER_EXTRA_PATHS_KEY)) {
-            config.getInitParameters().put(PROVIDER_EXTRA_PATHS_KEY, extra);
+            config.getInitParameters().put(PROVIDER_EXTRA_PATHS_KEY, extra)
         }
     }
 
     private static boolean isExtraPathsDefined(String extra) {
-        return extra != null && !extra.isEmpty();
+        return extra != null && !extra.isEmpty()
+    }
+
+    @Override
+    protected ResourceConfig getDefaultResourceConfig(Map<String, Object> props, WebConfig webConfig) throws ServletException {
+        return new DefaultResourceConfig(jaxrsConfig.getClasses())
     }
 }

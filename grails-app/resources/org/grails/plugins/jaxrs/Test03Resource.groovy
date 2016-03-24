@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.jaxrs.test
+package org.grails.plugins.jaxrs
 
 import grails.converters.JSON
+import org.grails.plugins.jaxrs.test.TestPerson
 
 import javax.ws.rs.Consumes
 import javax.ws.rs.POST
@@ -25,7 +26,7 @@ import javax.ws.rs.Produces
  * @author Martin Krasser
  */
 @Path('/test/03')
-class TestResource03 {
+class Test03Resource {
 
     @POST
     @Consumes('application/json')

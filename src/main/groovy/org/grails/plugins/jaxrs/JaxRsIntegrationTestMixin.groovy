@@ -1,7 +1,6 @@
-package org.grails.plugins.jaxrs.itest
+package org.grails.plugins.jaxrs
 
 import org.apache.commons.lang.StringUtils
-import org.grails.plugins.jaxrs.JaxrsController
 import org.grails.plugins.jaxrs.web.JaxrsContext
 import org.grails.plugins.jaxrs.web.JaxrsUtils
 

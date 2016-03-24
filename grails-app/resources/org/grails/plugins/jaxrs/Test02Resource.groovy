@@ -13,22 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.jaxrs.test
+package org.grails.plugins.jaxrs
 
-import org.grails.plugins.jaxrs.support.MessageBodyWriterSupport
+import org.grails.plugins.jaxrs.test.CustomRequestEntity
+import org.grails.plugins.jaxrs.test.CustomResponseEntity
 
+import javax.ws.rs.Consumes
+import javax.ws.rs.POST
+import javax.ws.rs.Path
 import javax.ws.rs.Produces
-import javax.ws.rs.core.MultivaluedMap
-import javax.ws.rs.ext.Provider
 
 /**
  * @author Martin Krasser
  */
-@Provider
-@Produces('text/plain')
-class CustomResponseEntityWriter extends MessageBodyWriterSupport<CustomResponseEntity> {
+@Path('/test/02')
+class Test02Resource {
 
-     void writeTo(CustomResponseEntity entity, MultivaluedMap httpHeaders, OutputStream entityStream) {
-         entityStream << entity.content
-     }
+    @POST
+    @Consumes('text/plain')
+    @Produces('text/plain')
+    CustomResponseEntity test(CustomRequestEntity requestEntity) {
+        new CustomResponseEntity(content:'response:' + requestEntity.content)
+    }
 }

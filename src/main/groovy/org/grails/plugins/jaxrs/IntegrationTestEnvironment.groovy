@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.jaxrs.itest
+package org.grails.plugins.jaxrs
 
 import grails.core.GrailsApplication
 import grails.spring.BeanBuilder

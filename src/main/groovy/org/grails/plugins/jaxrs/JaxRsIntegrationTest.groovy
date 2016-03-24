@@ -1,4 +1,4 @@
-package org.grails.plugins.jaxrs.itest
+package org.grails.plugins.jaxrs
 
 import javax.servlet.http.HttpServletResponse
 

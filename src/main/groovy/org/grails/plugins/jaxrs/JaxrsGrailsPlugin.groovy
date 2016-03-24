@@ -26,10 +26,7 @@ class JaxrsGrailsPlugin extends Plugin {
     ]
 
     def loadAfter = ['controllers', 'services', 'spring-security-core']
-    def artefacts = [
-            new ResourceArtefactHandler(),
-            new ProviderArtefactHandler()
-    ]
+
     def watchedResources = [
             "file:./grails-app/resources/**/*Resource.groovy",
             "file:./grails-app/providers/**/*Reader.groovy",
@@ -60,7 +57,8 @@ Apache Wink are likely to be added in upcoming versions of the plugin.
 
     def developers = [
             [name: 'Davide Cavestro', email: 'davide.cavestro@gmail.com'],
-            [name: 'Noam Y. Tenne', email: 'noam@10ne.org']
+            [name: 'Noam Y. Tenne', email: 'noam@10ne.org'],
+            [name: 'Bud Byrd', email: 'bud.byrd@gmail.com']
     ]
 
     def documentation = 'https://github.com/krasserm/grails-jaxrs/wiki'
@@ -74,8 +72,6 @@ Apache Wink are likely to be added in upcoming versions of the plugin.
      * resource and provider classes to the application context.
      */
     Closure doWithSpring() {{ ->
-        dispatcherServletBeanPostProcessor(JaxrsFilter.DispatcherServletBeanPostProcessor)
-
         jaxrsListener(ServletListenerRegistrationBean) {
             listener = bean(JaxrsListener)
             order = Ordered.LOWEST_PRECEDENCE
@@ -129,11 +125,14 @@ Apache Wink are likely to be added in upcoming versions of the plugin.
             return
         }
 
+        // Determine the requested resource bean scope
+        String requestedScope = getResourceScope(grailsApplication)
+
         if (grailsApplication.isArtefactOfType(ResourceArtefactHandler.TYPE, event.source)) {
             def resourceClass = grailsApplication.addArtefact(ResourceArtefactHandler.TYPE, event.source)
             beans {
                 "${resourceClass.propertyName}"(resourceClass.clazz) { bean ->
-                    bean.scope = owner.getResourceScope(grailsApplication)
+                    bean.scope = requestedScope
                     bean.autowire = true
                 }
             }.registerBeans(event.ctx)
@@ -150,7 +149,9 @@ Apache Wink are likely to be added in upcoming versions of the plugin.
         }
 
         // Setup the JaxrsConfig
-        doWithApplicationContext(event.ctx)
+        JaxrsContext context = applicationContext.getBean(JAXRS_CONTEXT_NAME, JaxrsContext)
+        JaxrsUtils.setupJaxrsContext(context, grailsApplication)
+        context.refresh();
     }
 
     /**
@@ -164,7 +165,7 @@ Apache Wink are likely to be added in upcoming versions of the plugin.
     void doWithApplicationContext() {
         JaxrsContext context = applicationContext.getBean(JAXRS_CONTEXT_NAME, JaxrsContext)
         JaxrsUtils.setupJaxrsContext(context, grailsApplication)
-        context.refresh();
+        context.init();
     }
 
     /**

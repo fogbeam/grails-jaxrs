@@ -13,22 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.jaxrs.test
+package org.grails.plugins.jaxrs
 
-import javax.ws.rs.GET
-import javax.ws.rs.Path
-import javax.ws.rs.Produces
-import javax.ws.rs.QueryParam
+import org.grails.plugins.jaxrs.support.MessageBodyReaderSupport
+import org.grails.plugins.jaxrs.test.CustomRequestEntity
+
+import javax.ws.rs.Consumes
+import javax.ws.rs.core.MultivaluedMap
+import javax.ws.rs.ext.Provider
 
 /**
  * @author Martin Krasser
  */
-@Path('/test/queryParam')
-class TestQueryParamResource {
-
-    @GET
-    @Produces('text/plain')
-    String test(@QueryParam('value') String value) {
-        value
-    }
+@Provider
+@Consumes('text/plain')
+class CustomRequestEntityReaderProvider extends MessageBodyReaderSupport<CustomRequestEntity> {
+     CustomRequestEntity readFrom(MultivaluedMap httpHeaders, InputStream entityStream) {
+         new CustomRequestEntity(content:entityStream.text)
+     }
 }

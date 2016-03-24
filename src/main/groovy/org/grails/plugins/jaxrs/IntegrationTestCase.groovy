@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.jaxrs.itest
+package org.grails.plugins.jaxrs
 
 import grails.util.Holders
-import org.grails.plugins.jaxrs.JaxrsController
 import org.grails.test.support.GrailsTestAutowirer
 import org.junit.Before
 import org.junit.BeforeClass

@@ -43,19 +43,22 @@ import org.apache.commons.logging.LogFactory
 class JaxrsUrlMappings {
     static mappings = { applicationContext ->
         Log logger = LogFactory.getLog(JaxrsUrlMappings)
+
         def patternList = applicationContext.grailsApplication.config.org.grails.jaxrs.url.mappings
 
         if (patternList instanceof List) {
             patternList.removeAll { !it }
         }
 
+        if (patternList instanceof String) {
+            patternList = [patternList]
+        }
+
         if (!patternList) {
             patternList = ['/api']
         }
-        else if (patternList instanceof String) {
-            patternList = [patternList]
-        }
-        else {
+
+        if (!(patternList instanceof List)) {
             throw new Exception("Configuration value 'org.grails.jaxrs.url.mappings' is invalid: '${patternList}'")
         }
 
