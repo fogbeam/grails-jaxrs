@@ -27,12 +27,11 @@ import java.io.IOException;
  * @author Martin Krasser
  */
 public interface JaxrsService {
-
     /**
      * Processes an HTTP <code>request</code> and writes the result the
      * HTTP <code>response</code>. This interface in
      *
-     * @param request HTTP request
+     * @param request  HTTP request
      * @param response HTTP response
      * @throws ServletException
      * @throws IOException

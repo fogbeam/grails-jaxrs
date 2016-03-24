@@ -6,6 +6,7 @@ import org.grails.plugins.jaxrs.provider.*
 import org.grails.plugins.jaxrs.web.JaxrsContext
 import org.grails.plugins.jaxrs.web.JaxrsFilter
 import org.grails.plugins.jaxrs.web.JaxrsListener
+import org.grails.plugins.jaxrs.web.JaxrsUtils
 import org.springframework.boot.context.embedded.FilterRegistrationBean
 import org.springframework.boot.context.embedded.ServletListenerRegistrationBean
 import org.springframework.core.Ordered
@@ -69,65 +70,11 @@ Apache Wink are likely to be added in upcoming versions of the plugin.
     def scm = [url: 'https://github.com/krasserm/grails-jaxrs']
 
     /**
-     * Adds the JaxrsFilter and JaxrsListener to the web application
-     * descriptor.
-     */
-
-    def doWithWebDescriptor = { xml ->
-
-      /*  def lastListener = xml.'listener'.iterator().toList().last()
-        lastListener + {
-            'listener' {
-                'listener-class'(JaxrsListener.name)
-            }
-        }
-
-        def firstFilter = xml.'filter'[0]
-        firstFilter + {
-            'filter' {
-                'filter-name'('jaxrsFilter')
-                'filter-class'(JaxrsFilter.name)
-            }
-        }
-
-        def firstFilterMapping = xml.'filter-mapping'[0]
-        firstFilterMapping + {
-            'filter-mapping' {
-                'filter-name'('jaxrsFilter')
-                'url-pattern'('*//*')
-                'dispatcher'('FORWARD')
-                'dispatcher'('REQUEST')
-            }
-        }
-
-        def grailsServlet = xml.servlet.find { servlet ->
-
-            'grails'.equalsIgnoreCase(servlet.'servlet-name'.text())
-
-        }
-
-        // reload default GrailsDispatcherServlet adding 'dispatchOptionsRequest':'true'
-        grailsServlet.replaceNode { node ->
-            'servlet' {
-                'servlet-name'('grails')
-                'servlet-class'(GrailsDispatcherServlet.name)
-                'init-param' {
-                    'param-name'('dispatchOptionsRequest')
-                    'param-value'('true')
-                }
-                'load-on-startup'('1')
-            }
-        }*/
-    }
-
-    /**
      * Adds the JaxrsContext and plugin- and application-specific JAX-RS
      * resource and provider classes to the application context.
      */
     Closure doWithSpring() {{ ->
-        println "Loading JAXRS..."
-
-        dispatcherServletBeanPostProcessor(JaxrsFilter.DispatcherServletBeanPostProcessor);
+        dispatcherServletBeanPostProcessor(JaxrsFilter.DispatcherServletBeanPostProcessor)
 
         jaxrsListener(ServletListenerRegistrationBean) {
             listener = bean(JaxrsListener)
@@ -140,7 +87,7 @@ Apache Wink are likely to be added in upcoming versions of the plugin.
         }
 
         // Configure the JAX-RS context
-        "jaxrsContext"(JaxrsContext)
+        jaxrsContext(JaxrsContext)
 
         // Configure default providers
         "${XMLWriter.name}"(XMLWriter)
@@ -150,16 +97,19 @@ Apache Wink are likely to be added in upcoming versions of the plugin.
         "${DomainObjectReader.name}"(DomainObjectReader)
         "${DomainObjectWriter.name}"(DomainObjectWriter)
 
+        // Determine the requested resource bean scope
+        String requestedScope = getResourceScope(grailsApplication)
+
         // Configure application-provided resources
-        application.resourceClasses.each { rc ->
+        grailsApplication.resourceClasses.each { rc ->
             "${rc.propertyName}"(rc.clazz) { bean ->
-                bean.scope = owner.getResourceScope(application)
+                bean.scope = requestedScope
                 bean.autowire = true
             }
         }
 
         // Configure application-provided providers
-        application.providerClasses.each { pc ->
+        grailsApplication.providerClasses.each { pc ->
             "${pc.propertyName}"(pc.clazz) { bean ->
                 bean.scope = 'singleton'
                 bean.autowire = true
@@ -175,7 +125,6 @@ Apache Wink are likely to be added in upcoming versions of the plugin.
      * the application context.
      */
     void onChange(event) {
-
         if (!event.ctx) {
             return
         }
@@ -202,9 +151,6 @@ Apache Wink are likely to be added in upcoming versions of the plugin.
 
         // Setup the JaxrsConfig
         doWithApplicationContext(event.ctx)
-
-        // Resfresh the JaxrsContext
-        event.ctx.getBean(JAXRS_CONTEXT_NAME).refresh()
     }
 
     /**
@@ -216,54 +162,23 @@ Apache Wink are likely to be added in upcoming versions of the plugin.
      * <code>jersey</code>.
      */
     void doWithApplicationContext() {
-        def context = applicationContext.getBean(JAXRS_CONTEXT_NAME)
-
-        def config = context.jaxrsConfig
-
-        context.jaxrsProviderName = getProviderName(grailsApplication)
-        context.jaxrsProviderExtraPaths = getProviderExtraPaths(grailsApplication)
-        context.jaxrsProviderInitParameters = getProviderInitParameters(grailsApplication)
-
-        config.reset()
-        config.classes << XMLWriter
-        config.classes << XMLReader
-        config.classes << JSONWriter
-        config.classes << JSONReader
-        config.classes << DomainObjectReader
-        config.classes << DomainObjectWriter
-
-        grailsApplication.getArtefactInfo('Resource').classesByName.values().each { clazz ->
-            config.classes << clazz
-        }
-        grailsApplication.getArtefactInfo('Provider').classesByName.values().each { clazz ->
-            config.classes << clazz
-        }
-
+        JaxrsContext context = applicationContext.getBean(JAXRS_CONTEXT_NAME, JaxrsContext)
+        JaxrsUtils.setupJaxrsContext(context, grailsApplication)
         context.refresh();
     }
 
+    /**
+     * Returns the scope for all resource classes as requested by
+     * the application configuration. Defaults to "prototype".
+     *
+     * @param application
+     * @return
+     */
     private String getResourceScope(application) {
         def scope = application.config.org.grails.jaxrs.resource.scope
         if (!scope) {
             scope = 'prototype'
         }
-        scope
-    }
-
-    private String getProviderName(application) {
-        def name = application.config.org.grails.jaxrs.provider.name
-        if (!name) {
-            name = JaxrsContext.JAXRS_PROVIDER_NAME_JERSEY
-        }
-        name
-    }
-
-    private String getProviderExtraPaths(application) {
-        application.config.org.grails.jaxrs.provider.extra.paths
-    }
-
-    private Map<String, String> getProviderInitParameters(application) {
-        ConfigObject config = application.config.org.grails.jaxrs.provider.init.parameters
-        return config.flatten();
+        return scope
     }
 }

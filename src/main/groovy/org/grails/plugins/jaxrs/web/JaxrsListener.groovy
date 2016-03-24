@@ -13,16 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.jaxrs.web;
+package org.grails.plugins.jaxrs.web
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import javax.servlet.ServletContextEvent
+import javax.servlet.ServletContextListener
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import javax.servlet.ServletException;
-
-import static org.grails.plugins.jaxrs.web.JaxrsUtils.getRequiredJaxrsContext;
+import static org.grails.plugins.jaxrs.web.JaxrsUtils.getRequiredJaxrsContext
 
 /**
  * Initializes a Jersey servlet for request processing.
@@ -31,22 +27,15 @@ import static org.grails.plugins.jaxrs.web.JaxrsUtils.getRequiredJaxrsContext;
  */
 
 public class JaxrsListener implements ServletContextListener {
-
-    private static final Log LOG = LogFactory.getLog(JaxrsListener.class);
-
     public void contextDestroyed(ServletContextEvent event) {
-        getRequiredJaxrsContext(event.getServletContext()).destroy();
+        getRequiredJaxrsContext(event.getServletContext()).destroy()
     }
 
     public void contextInitialized(ServletContextEvent event) {
-        JaxrsContext jaxrsContext = getRequiredJaxrsContext(event.getServletContext());
-        jaxrsContext.setJaxrsServletContext(event.getServletContext());
+        JaxrsContext jaxrsContext = getRequiredJaxrsContext(event.getServletContext())
 
-        try {
-            jaxrsContext.init();
-        } catch (ServletException e) {
-            LOG.error("Initialization of JAX-RS context failed", e);
-            e.printStackTrace();
-        }
+        jaxrsContext.setJaxrsServletContext(event.servletContext)
+
+        jaxrsContext.init()
     }
 }

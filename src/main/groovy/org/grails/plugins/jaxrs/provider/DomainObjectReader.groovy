@@ -22,18 +22,17 @@ import javax.ws.rs.ext.Provider
 
 /**
  * A concrete domain object reader that provides the same functionality as
- * {@link AbstractDomainObjectReader}. It can be disabled by setting
+ * {@link DomainObjectReaderSupport}. It can be disabled by setting
  * <code>org.grails.jaxrs.doreader.disable</code> to <code>true</code> in the
  * application config.
  *
- * @see AbstractDomainObjectReader
+ * @see DomainObjectReaderSupport
  *
  * @author Martin Krasser
  */
 @Provider
 @Consumes(['text/xml', 'application/xml', 'text/x-json', 'application/json'])
 class DomainObjectReader extends DomainObjectReaderSupport {
-
     protected boolean isEnabled() {
         !grailsApplication.config.org.grails.jaxrs.doreader.disable
     }

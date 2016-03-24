@@ -18,6 +18,8 @@ package org.grails.plugins.jaxrs.support
 import grails.core.GrailsApplication
 import grails.core.support.GrailsApplicationAware
 import grails.web.databinding.DataBindingUtils
+import org.grails.core.artefact.DomainClassArtefactHandler
+import org.springframework.validation.BindingResult
 
 import javax.ws.rs.WebApplicationException
 import javax.ws.rs.core.MediaType
@@ -64,7 +66,7 @@ abstract class DomainObjectReaderSupport implements MessageBodyReader<Object>, G
      * <code>false</code> this method will always return <code>false</code>.
      */
     boolean isReadable(Class type, Type genericType, Annotation[] annotations, MediaType mediaType) {
-        return isEnabled() && grailsApplication.isDomainClass(type) && (isXmlType(mediaType) || isJsonType(mediaType))
+        return isEnabled() && DomainClassArtefactHandler.isDomainClass(type) && (isXmlType(mediaType) || isJsonType(mediaType))
     }
 
     /**
@@ -83,9 +85,11 @@ abstract class DomainObjectReaderSupport implements MessageBodyReader<Object>, G
         } else {
             defaultEncoding = ConverterUtils.getDefaultJSONEncoding(grailsApplication)
         }
+
         String resolvedEncoding = ConverterUtils.getEncoding(httpHeaders, mediaType, defaultEncoding)
-        DataBindingUtils.bindObjectToInstance(domainInstance, new InputStreamReader(entityStream, resolvedEncoding))
-        domainInstance
+        BindingResult result = DataBindingUtils.bindObjectToInstance(domainInstance, new InputStreamReader(entityStream, resolvedEncoding))
+
+        return domainInstance
     }
 
     /**

@@ -70,9 +70,3 @@ grails {
         }
     }
 }
-
-
-org.grails.jaxrs.url.mappings = ['']
-
-
-

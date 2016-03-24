@@ -19,6 +19,7 @@ import grails.converters.JSON
 import grails.converters.XML
 import grails.core.GrailsApplication
 import grails.core.support.GrailsApplicationAware
+import org.grails.core.artefact.DomainClassArtefactHandler
 
 import javax.ws.rs.WebApplicationException
 import javax.ws.rs.core.MediaType
@@ -102,7 +103,7 @@ abstract class DomainObjectWriterSupport implements MessageBodyWriter<Object>, G
             return compatibleMediaType
         } else if (genericType instanceof ParameterizedType) {
             return isDomainObjectCollectionType(genericType)
-        } else if (grailsApplication.isDomainClass(type)) {
+        } else if (DomainClassArtefactHandler.isDomainClass(type)) {
             return compatibleMediaType
         }
         return false
@@ -169,6 +170,6 @@ abstract class DomainObjectWriterSupport implements MessageBodyWriter<Object>, G
         if (genericType.actualTypeArguments.length == 0) {
             return false
         }
-        return grailsApplication.isDomainClass(genericType.actualTypeArguments[0])
+        return DomainClassArtefactHandler.isDomainClass(genericType.actualTypeArguments[0])
     }
 }

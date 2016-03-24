@@ -39,7 +39,6 @@ import java.util.Map;
  * @author David Castro
  */
 public class JaxrsContext {
-
     private static final Log LOG = LogFactory.getLog(JaxrsContext.class);
 
     /**
@@ -56,8 +55,6 @@ public class JaxrsContext {
      * Name of the JAX-RS servlet.
      */
     public static final String SERVLET_NAME = "org.grails.jaxrs.servlet.name";
-
-    public static Servlet servletInstance = null;
 
     private volatile Servlet jaxrsServlet = null;
     private volatile ServletContext jaxrsServletContext;
@@ -132,7 +129,7 @@ public class JaxrsContext {
      *
      * @param jaxrsProviderInitParameters servlet config init parameters.
      */
-    public void setJaxrsInitParameters(Map<String, String> jaxrsProviderInitParameters) {
+    public void setJaxrsProviderInitParameters(Map<String, String> jaxrsProviderInitParameters) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("setting init parameters: " + jaxrsProviderInitParameters);
         }
@@ -153,7 +150,7 @@ public class JaxrsContext {
         }
     }
 
-    void init() throws ServletException {
+    public void init() throws ServletException {
         RuntimeDelegate.setInstance(null);
         if (jaxrsProviderName.equals(JAXRS_PROVIDER_NAME_RESTLET)) {
             System.setProperty(
@@ -172,12 +169,12 @@ public class JaxrsContext {
         }
     }
 
-    void init(Servlet jaxrsServlet) throws ServletException {
+    public void init(Servlet jaxrsServlet) throws ServletException {
         this.jaxrsServlet = jaxrsServlet;
         this.jaxrsServlet.init(new Config());
     }
 
-    void destroy() {
+    public void destroy() {
         if (jaxrsServlet != null) {
             jaxrsServlet.destroy();
             jaxrsServlet = null;

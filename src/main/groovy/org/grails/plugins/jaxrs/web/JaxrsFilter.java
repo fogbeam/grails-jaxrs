@@ -31,7 +31,6 @@ import java.io.IOException;
  * A servlet filter that stores the request URI as request attribute.
  *
  * @author Martin Krasser
- *
  * @see RequestWrapper
  */
 public class JaxrsFilter extends OncePerRequestFilter {
@@ -43,8 +42,8 @@ public class JaxrsFilter extends OncePerRequestFilter {
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request,
-            HttpServletResponse response, FilterChain chain)
-            throws ServletException, IOException {
+                                    HttpServletResponse response, FilterChain chain)
+        throws ServletException, IOException {
         JaxrsUtils.setRequestUriAttribute(request, request.getRequestURI());
         chain.doFilter(request, response);
     }

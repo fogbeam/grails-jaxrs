@@ -39,13 +39,12 @@ public class JerseyServlet extends SpringServlet {
      * {@link Provider} classes.
      *
      * @param servletConfig
-     *
      * @see Config#getJaxrsProviderExtraPaths()
      */
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
         if (servletConfig instanceof Config) {
-            init((Config)servletConfig);
+            init((Config) servletConfig);
         }
         super.init(servletConfig);
     }
