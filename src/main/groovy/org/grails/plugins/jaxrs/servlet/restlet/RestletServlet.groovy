@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 the original author or authors.
+ * Copyright 2009, 2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.jaxrs.core
+package org.grails.plugins.jaxrs.servlet.restlet
 
+import org.grails.plugins.jaxrs.core.JaxrsApplicationConfig
 import org.restlet.Application
 import org.restlet.Context
-import org.restlet.ext.jaxrs.InstantiateException
 import org.restlet.ext.jaxrs.JaxRsApplication
-import org.restlet.ext.jaxrs.ObjectFactory
 import org.restlet.ext.servlet.ServerServlet
-import org.springframework.context.ApplicationContext
-
-import javax.servlet.ServletContext
-
-import static org.springframework.web.context.support.WebApplicationContextUtils.getRequiredWebApplicationContext
 
 /**
  * Servlet that dispatches JAX-RS requests to Restlet.
@@ -36,38 +30,31 @@ class RestletServlet extends ServerServlet {
     /**
      * JAX-RS Application.
      */
-    JaxrsApplicationConfig config
+    JaxrsApplicationConfig applicationConfig
 
     /**
      * Creates a new {@link RestletServlet}
      *
-     * @param config
-     *            JAX-RS configuration of the current {@link JaxrsContext}.
+     * @param applicationConfig
+     *            JAX-RS configuration of the current {@link org.grails.plugins.jaxrs.core.JaxrsContext}.
      */
-    RestletServlet(JaxrsApplicationConfig config) {
-        this.config = config
+    RestletServlet(JaxrsApplicationConfig applicationConfig) {
+        this.applicationConfig = applicationConfig
     }
-
-    //
-    // TODO: set servlet config init parameters ...
-    //
 
     /**
      * Destroys this servlet removing all Restlet-specific attributes from the
      * servlet context.
      */
     @Override
-    //@SuppressWarnings("unchecked")
     void destroy() {
-        Enumeration<String> names = getServletContext().getAttributeNames()
-        while (names.hasMoreElements()) {
-            String name = names.nextElement()
-            if (name.startsWith("org.restlet")) {
-                getServletContext().removeAttribute(name)
-            }
+        getServletContext().getAttributeNames().find { String it ->
+            it.startsWith('org.restlet')
+        }.each { String it ->
+            getServletContext().removeAttribute(it)
         }
-        super.destroy()
 
+        super.destroy()
     }
 
     /**
@@ -75,28 +62,14 @@ class RestletServlet extends ServerServlet {
      * A custom object factory is provided to lookup JAX-RS resource and
      * provider objects from the Spring web application context.
      *
-     * @param Restlet
-     *            parent context.
+     * @param Restlet parent context.
      * @return a new {@link JaxRsApplication} instance.
      */
     @Override
     protected Application createApplication(Context parentContext) {
         JaxRsApplication jaxRsApplication = new JaxRsApplication(parentContext.createChildContext())
         jaxRsApplication.setObjectFactory(new ApplicationContextObjectFactory(getServletContext()))
-        jaxRsApplication.add(config)
+        jaxRsApplication.add(applicationConfig)
         return jaxRsApplication
-    }
-
-    private static class ApplicationContextObjectFactory implements ObjectFactory {
-        ApplicationContext applicationContext
-
-        ApplicationContextObjectFactory(ServletContext servletContext) {
-            this.applicationContext = getRequiredWebApplicationContext(servletContext)
-        }
-
-        public <T> T getInstance(Class<T> jaxRsClass) throws InstantiateException {
-            // TODO: make this implementation more robust (plus improved performance)
-            return (T) applicationContext.getBeansOfType(jaxRsClass).values().iterator().next()
-        }
     }
 }

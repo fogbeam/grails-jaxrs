@@ -22,7 +22,6 @@ import org.grails.core.AbstractInjectableGrailsClass;
  * @author Martin Krasser
  */
 public class DefaultGrailsProviderClass extends AbstractInjectableGrailsClass implements GrailsResourceClass {
-
     public static final String PROVIDER = "Provider";
 
     public DefaultGrailsProviderClass(Class clazz) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009,2016 the original author or authors.
+ * Copyright 2009, 2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 package org.grails.plugins.jaxrs.core
+
+import org.grails.plugins.jaxrs.servlet.ServletFactory
+import org.springframework.beans.factory.InitializingBean
 
 import javax.servlet.Servlet
 import javax.servlet.ServletContext
@@ -30,17 +33,7 @@ import javax.ws.rs.ext.RuntimeDelegate
  * @author David Castro
  * @author Bud Byrd
  */
-class JaxrsContext {
-    /**
-     * Name of the Jersey JAX-RS implementation.
-     */
-    static final String JAXRS_PROVIDER_NAME_JERSEY = "jersey"
-
-    /**
-     * Name of the Restlet JAX-RS implementation.
-     */
-    static final String JAXRS_PROVIDER_NAME_RESTLET = "restlet"
-
+class JaxrsContext implements InitializingBean {
     /**
      * Name of the JAX-RS servlet.
      */
@@ -62,19 +55,14 @@ class JaxrsContext {
     volatile JaxrsApplicationConfig applicationConfig = new JaxrsApplicationConfig()
 
     /**
-     * Which JAX-RS implementation to use.
-     */
-    volatile String providerName = JAXRS_PROVIDER_NAME_JERSEY
-
-    /**
-     * Extra classpaths to search for providers.
-     */
-    volatile String providerExtraPaths
-
-    /**
      * Initialization parameters to pass to the JAX-RS implementation.
      */
     volatile Map<String, String> providerInitParameters = [:]
+
+    /**
+     * Servlet factory responsible for providing an implementation-specific JAX-RS provider.
+     */
+    ServletFactory jaxrsServletFactory
 
     /**
      * Reloads the JAX-RS configuration defined by Grails applications and
@@ -100,33 +88,11 @@ class JaxrsContext {
 
         RuntimeDelegate.setInstance(null)
 
-        Servlet servlet
+        System.setProperty(RuntimeDelegate.JAXRS_RUNTIME_DELEGATE_PROPERTY, jaxrsServletFactory.getRuntimeDelegateClassName())
 
-        switch (providerName) {
-            case JAXRS_PROVIDER_NAME_RESTLET:
-                System.setProperty(
-                    "javax.ws.rs.ext.RuntimeDelegate",
-                    "org.restlet.ext.jaxrs.internal.spi.RuntimeDelegateImpl"
-                )
-                servlet = new RestletServlet(applicationConfig)
-                break
-
-            case JAXRS_PROVIDER_NAME_JERSEY:
-                System.setProperty(
-                    "javax.ws.rs.ext.RuntimeDelegate",
-                    "com.sun.jersey.server.impl.provider.RuntimeDelegateImpl"
-                )
-                servlet = new JerseyServlet(applicationConfig)
-                break
-
-            default:
-                throw new ServletException(
-                    "Illegal provider name: ${providerName}. either use '${JAXRS_PROVIDER_NAME_JERSEY}' or " +
-                        "'${JAXRS_PROVIDER_NAME_RESTLET}'."
-                )
-        }
-
-        initServlet(servlet)
+        JaxrsServletConfig servletConfig = createServletConfig()
+        jaxrsServlet = jaxrsServletFactory.createServlet(applicationConfig, servletConfig)
+        jaxrsServlet.init(servletConfig)
     }
 
     /**
@@ -149,7 +115,6 @@ class JaxrsContext {
         return new JaxrsServletConfig(
             servletContext,
             SERVLET_NAME,
-            providerExtraPaths,
             new Hashtable<String, String>(providerInitParameters)
         )
     }
@@ -177,5 +142,21 @@ class JaxrsContext {
             throw new IllegalStateException("can not service a JAX-RS request because no servlet has been started")
         }
         jaxrsServlet.service(request, response)
+    }
+
+    /**
+     * Invoked by a BeanFactory after it has set all bean properties supplied
+     * (and satisfied BeanFactoryAware and ApplicationContextAware).
+     * <p>This method allows the bean instance to perform initialization only
+     * possible when all bean properties have been set and to throw an
+     * exception in the event of misconfiguration.
+     * @throws Exception in the event of misconfiguration (such
+     * as failure to set an essential property) or if initialization fails.
+     */
+    @Override
+    void afterPropertiesSet() throws Exception {
+        if (!jaxrsServletFactory) {
+            throw new NullPointerException("the 'jaxrsServletFactory' Spring bean is not set")
+        }
     }
 }

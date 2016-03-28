@@ -4,8 +4,9 @@ import javax.servlet.ServletConfig
 import javax.servlet.ServletContext
 
 /**
- * An immutable servlet configuration that includes some extra information related to classpath
- * discovery for JAX-RS resources.
+ * A servlet configuration that allows for modification of the class list.
+ *
+ * @author Bud Byrd
  */
 class JaxrsServletConfig implements ServletConfig {
     /**
@@ -24,22 +25,16 @@ class JaxrsServletConfig implements ServletConfig {
     final Hashtable<String, String> initParameters
 
     /**
-     * Servlet context to use with the new servlet.
-     */
-    final String extraClassPaths
-
-    /**
      * Constructor.
      *
      * @param servletName
      * @param extraClassPaths
      * @param initParameters
      */
-    JaxrsServletConfig(ServletContext servletContext, String servletName, String extraClassPaths, Hashtable<String, String> initParameters) {
+    JaxrsServletConfig(ServletContext servletContext, String servletName, Hashtable<String, String> initParameters) {
         this.servletContext = servletContext
         this.servletName = servletName
         this.initParameters = initParameters
-        this.extraClassPaths = extraClassPaths
     }
 
     /**

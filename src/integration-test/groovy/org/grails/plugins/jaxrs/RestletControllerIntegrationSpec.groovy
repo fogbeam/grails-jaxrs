@@ -16,15 +16,11 @@
 package org.grails.plugins.jaxrs
 
 import grails.test.mixin.integration.Integration
-import org.grails.plugins.jaxrs.core.JaxrsContext
 
 /**
  * @author Noam Y. Tenne
  */
 @Integration
 class RestletControllerIntegrationSpec extends JaxrsControllerIntegrationSpec {
-    // TODO: change to RESTlet
-    String getJaxrsImplementation() {
-        JaxrsContext.JAXRS_PROVIDER_NAME_RESTLET
-    }
+    // TODO: actually use restlet (meh)
 }

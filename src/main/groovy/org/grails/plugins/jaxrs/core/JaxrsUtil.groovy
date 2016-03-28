@@ -138,8 +138,6 @@ class JaxrsUtil {
      * @param grailsApplication
      */
     void setupJaxrsContext() {
-        jaxrsContext.providerName = getProviderName()
-        jaxrsContext.providerExtraPaths = getProviderExtraPaths()
         jaxrsContext.providerInitParameters = getProviderInitParameters()
 
         JaxrsApplicationConfig config = jaxrsContext.applicationConfig
@@ -158,38 +156,6 @@ class JaxrsUtil {
         grailsApplication.getArtefacts('Provider').each { clazz ->
             config.classes << clazz.clazz
         }
-    }
-
-    /**
-     * Returns the configured servlet provider to use for JAX-RS.
-     *
-     * @param application
-     * @return
-     */
-    String getProviderName() {
-        def name = grailsApplication.config.org.grails.jaxrs.provider.name
-
-        if (!(name instanceof String) || !name) {
-            return JaxrsContext.JAXRS_PROVIDER_NAME_JERSEY
-        }
-
-        return name
-    }
-
-    /**
-     * Returns any extra classpaths configured by the application.
-     *
-     * @param application
-     * @return
-     */
-    String getProviderExtraPaths() {
-        def paths = grailsApplication.config.org.grails.jaxrs.provider.extra.paths
-
-        if (!(paths instanceof String) || !paths) {
-            return null
-        }
-
-        return paths
     }
 
     /**
