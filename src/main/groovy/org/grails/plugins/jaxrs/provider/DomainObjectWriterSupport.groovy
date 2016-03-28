@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.jaxrs.support
+package org.grails.plugins.jaxrs.provider
 
 import grails.converters.JSON
 import grails.converters.XML
@@ -29,8 +29,8 @@ import java.lang.annotation.Annotation
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
-import static org.grails.plugins.jaxrs.support.ConverterUtils.*
-import static org.grails.plugins.jaxrs.support.ProviderUtils.*
+import static org.grails.plugins.jaxrs.provider.ConverterUtils.*
+import static ProviderUtils.*
 
 /**
  * A message body writer that converts Grails domain objects to XML or JSON

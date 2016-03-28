@@ -13,14 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.jaxrs;
+package org.grails.plugins.jaxrs.artefact;
 
 import grails.core.GrailsClass;
 
+import javax.ws.rs.ext.Provider;
+
 /**
- * Represents a JAX-RS resource class in Grails.
+ * Represents a JAX-RS {@link Provider} class in Grails.
  *
  * @author Martin Krasser
  */
-public interface GrailsResourceClass extends GrailsClass {
+public interface GrailsProviderClass extends GrailsClass {
 }

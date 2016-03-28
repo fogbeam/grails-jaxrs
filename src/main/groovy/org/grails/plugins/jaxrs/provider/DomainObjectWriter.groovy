@@ -15,15 +15,13 @@
  */
 package org.grails.plugins.jaxrs.provider
 
-import org.grails.plugins.jaxrs.support.DomainObjectWriterSupport
-
 import javax.ws.rs.Produces
 import javax.ws.rs.ext.MessageBodyWriter
 import javax.ws.rs.ext.Provider
 
 /**
  * A concrete domain object writer that provides the same functionality as
- * {@link AbstractDomainObjectWriter}. It can be disabled by setting
+ * {@link DomainObjectWriterSupport}. It can be disabled by setting
  * <code>org.grails.jaxrs.dowriter.disable</code> to <code>true</code> in the
  * application config. If this provider should only support resource methods
  * that declare a generic collection as return type, where the generic type

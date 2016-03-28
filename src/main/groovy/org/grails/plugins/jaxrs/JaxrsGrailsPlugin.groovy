@@ -1,44 +1,80 @@
 package org.grails.plugins.jaxrs
 
 import grails.plugins.Plugin
+import org.grails.plugins.jaxrs.artefact.ProviderArtefactHandler
+import org.grails.plugins.jaxrs.artefact.ResourceArtefactHandler
+import org.grails.plugins.jaxrs.core.JaxrsContext
+import org.grails.plugins.jaxrs.core.JaxrsFilter
+import org.grails.plugins.jaxrs.core.JaxrsListener
+import org.grails.plugins.jaxrs.core.JaxrsUtil
 import org.grails.plugins.jaxrs.generator.CodeGenerator
 import org.grails.plugins.jaxrs.provider.*
-import org.grails.plugins.jaxrs.web.JaxrsContext
-import org.grails.plugins.jaxrs.web.JaxrsFilter
-import org.grails.plugins.jaxrs.web.JaxrsListener
-import org.grails.plugins.jaxrs.web.JaxrsUtils
 import org.springframework.boot.context.embedded.FilterRegistrationBean
 import org.springframework.boot.context.embedded.ServletListenerRegistrationBean
 import org.springframework.core.Ordered
 
-import static org.grails.plugins.jaxrs.web.JaxrsUtils.JAXRS_CONTEXT_NAME
-
 class JaxrsGrailsPlugin extends Plugin {
+    /**
+     * Version of the plugin.
+     *
+     * Note that the build.gradle file must be updated with this version as well.
+     */
     def version = "0.12"
+
+    /**
+     * What version of Grails this plugin is intended for.
+     */
     def grailsVersion = "3.0 > *"
+
+    /**
+     * Files to exclude from the plugin.
+     *
+     * Note that the build.gradle file must be updated with this list as well.
+     */
     def pluginExcludes = [
-            "grails-app/domain/*",
-            "grails-app/providers/*",
-            "grails-app/resources/*",
-            "src/groovy/org/grails/jaxrs/test/*",
-            "lib/*-sources.jar",
-            "web-app/**"
+        "grails-app/domain/*",
+        "grails-app/providers/*",
+        "grails-app/resources/*",
+        "src/groovy/org/grails/jaxrs/test/*",
+        "lib/*-sources.jar",
+        "web-app/**"
     ]
 
+    /**
+     * Load order.
+     */
     def loadAfter = ['controllers', 'services', 'spring-security-core']
 
+    /**
+     * Which files to watch for reloading.
+     */
     def watchedResources = [
-            "file:./grails-app/resources/**/*Resource.groovy",
-            "file:./grails-app/providers/**/*Reader.groovy",
-            "file:./grails-app/providers/**/*Writer.groovy",
-            "file:./plugins/*/grails-app/resources/**/*Resource.groovy",
-            "file:./plugins/*/grails-app/providers/**/*Reader.groovy",
-            "file:./plugins/*/grails-app/providers/**/*Writer.groovy"
+        "file:./grails-app/resources/**/*Resource.groovy",
+        "file:./grails-app/providers/**/*Reader.groovy",
+        "file:./grails-app/providers/**/*Writer.groovy",
+        "file:./plugins/*/grails-app/resources/**/*Resource.groovy",
+        "file:./plugins/*/grails-app/providers/**/*Reader.groovy",
+        "file:./plugins/*/grails-app/providers/**/*Writer.groovy"
     ]
 
+    /**
+     * Plugin author.
+     */
     def author = "Martin Krasser"
+
+    /**
+     * Author email address.
+     */
     def authorEmail = "krasserm@googlemail.com"
+
+    /**
+     * Plugin title.
+     */
     def title = "JSR 311 plugin"
+
+    /**
+     * Description of the plugin.
+     */
     def description = """
 A plugin that supports the development of RESTful web services based on the
 Java API for RESTful Web Services (JSR 311: JAX-RS). It is targeted at
@@ -55,72 +91,99 @@ on the Google App Engine. Other JAX-RS implementations such as RestEasy or
 Apache Wink are likely to be added in upcoming versions of the plugin.
 """
 
+    /**
+     * Developers who have contributed to the development of the plugin.
+     */
     def developers = [
-            [name: 'Davide Cavestro', email: 'davide.cavestro@gmail.com'],
-            [name: 'Noam Y. Tenne', email: 'noam@10ne.org'],
-            [name: 'Bud Byrd', email: 'bud.byrd@gmail.com']
+        [name: 'Davide Cavestro', email: 'davide.cavestro@gmail.com'],
+        [name: 'Noam Y. Tenne', email: 'noam@10ne.org'],
+        [name: 'Bud Byrd', email: 'bud.byrd@gmail.com']
     ]
 
+    /**
+     * Documentation URL.
+     */
     def documentation = 'https://github.com/krasserm/grails-jaxrs/wiki'
 
+    /**
+     * Issues URL.
+     */
     def issueManagement = [url: 'https://github.com/krasserm/grails-jaxrs/issues']
 
+    /**
+     * Source control URL.
+     */
     def scm = [url: 'https://github.com/krasserm/grails-jaxrs']
 
     /**
      * Adds the JaxrsContext and plugin- and application-specific JAX-RS
      * resource and provider classes to the application context.
      */
-    Closure doWithSpring() {{ ->
-        jaxrsListener(ServletListenerRegistrationBean) {
-            listener = bean(JaxrsListener)
-            order = Ordered.LOWEST_PRECEDENCE
-        }
+    Closure doWithSpring() {
+        { ->
+            jaxrsListener(ServletListenerRegistrationBean) {
+                listener = bean(JaxrsListener)
+                order = Ordered.LOWEST_PRECEDENCE
+            }
 
-        jaxrsFilter(FilterRegistrationBean) {
-            filter = bean(JaxrsFilter)
-            order = Ordered.HIGHEST_PRECEDENCE+10
-        }
+            jaxrsFilter(FilterRegistrationBean) {
+                filter = bean(JaxrsFilter)
+                order = Ordered.HIGHEST_PRECEDENCE + 10
+            }
 
-        // Configure the JAX-RS context
-        jaxrsContext(JaxrsContext)
+            "${CodeGenerator.name}"(CodeGenerator)
 
-        // Configure default providers
-        "${XMLWriter.name}"(XMLWriter)
-        "${XMLReader.name}"(XMLReader)
-        "${JSONWriter.name}"(JSONWriter)
-        "${JSONReader.name}"(JSONReader)
-        "${DomainObjectReader.name}"(DomainObjectReader)
-        "${DomainObjectWriter.name}"(DomainObjectWriter)
+            jaxrsContext(JaxrsContext)
 
-        // Determine the requested resource bean scope
-        String requestedScope = getResourceScope(grailsApplication)
-
-        // Configure application-provided resources
-        grailsApplication.resourceClasses.each { rc ->
-            "${rc.propertyName}"(rc.clazz) { bean ->
-                bean.scope = requestedScope
+            "${JaxrsUtil.BEAN_NAME}"(JaxrsUtil) { bean ->
                 bean.autowire = true
             }
-        }
 
-        // Configure application-provided providers
-        grailsApplication.providerClasses.each { pc ->
-            "${pc.propertyName}"(pc.clazz) { bean ->
-                bean.scope = 'singleton'
-                bean.autowire = true
+            "${XMLWriter.name}"(XMLWriter)
+            "${XMLReader.name}"(XMLReader)
+            "${JSONWriter.name}"(JSONWriter)
+            "${JSONReader.name}"(JSONReader)
+            "${DomainObjectReader.name}"(DomainObjectReader)
+            "${DomainObjectWriter.name}"(DomainObjectWriter)
+
+            String requestedScope = getResourceScope(grailsApplication)
+
+            grailsApplication.resourceClasses.each { rc ->
+                "${rc.propertyName}"(rc.clazz) { bean ->
+                    bean.scope = requestedScope
+                    bean.autowire = true
+                }
+            }
+
+            grailsApplication.providerClasses.each { pc ->
+                "${pc.propertyName}"(pc.clazz) { bean ->
+                    bean.scope = 'singleton'
+                    bean.autowire = true
+                }
             }
         }
+    }
 
-        // Configure the resource code generator
-        "${CodeGenerator.name}"(CodeGenerator)
-    }}
+    /**
+     * Reconfigures the JaxrsApplicationConfig with plugin- and application-specific
+     * JAX-RS resource and provider classes. Configures the JaxrsContext
+     * with the JAX-RS implementation to use. The name of the JAX-RS
+     * implementation is obtained from the configuration property
+     * <code>org.grails.jaxrs.provider.name</code>. Default value is
+     * <code>jersey</code>.
+     */
+    void doWithApplicationContext() {
+        JaxrsUtil jaxrsUtil = JaxrsUtil.getInstance(applicationContext)
+
+        jaxrsUtil.setupJaxrsContext()
+        jaxrsUtil.jaxrsContext.init()
+    }
 
     /**
      * Updates application-specific JAX-RS resource and provider classes in
      * the application context.
      */
-    void onChange(event) {
+    void onChange(Map<String, Object> event) {
         if (!event.ctx) {
             return
         }
@@ -136,7 +199,8 @@ Apache Wink are likely to be added in upcoming versions of the plugin.
                     bean.autowire = true
                 }
             }.registerBeans(event.ctx)
-        } else if (grailsApplication.isArtefactOfType(ProviderArtefactHandler.TYPE, event.source)) {
+        }
+        else if (grailsApplication.isArtefactOfType(ProviderArtefactHandler.TYPE, event.source)) {
             def providerClass = grailsApplication.addArtefact(ProviderArtefactHandler.TYPE, event.source)
             beans {
                 "${providerClass.propertyName}"(providerClass.clazz) { bean ->
@@ -144,28 +208,14 @@ Apache Wink are likely to be added in upcoming versions of the plugin.
                     bean.autowire = true
                 }
             }.registerBeans(event.ctx)
-        } else {
+        }
+        else {
             return
         }
 
-        // Setup the JaxrsConfig
-        JaxrsContext context = applicationContext.getBean(JAXRS_CONTEXT_NAME, JaxrsContext)
-        JaxrsUtils.setupJaxrsContext(context, grailsApplication)
-        context.refresh();
-    }
-
-    /**
-     * Reconfigures the JaxrsConfig with plugin- and application-specific
-     * JAX-RS resource and provider classes. Configures the JaxrsContext
-     * with the JAX-RS implementation to use. The name of the JAX-RS
-     * implementation is obtained from the configuration property
-     * <code>org.grails.jaxrs.provider.name</code>. Default value is
-     * <code>jersey</code>.
-     */
-    void doWithApplicationContext() {
-        JaxrsContext context = applicationContext.getBean(JAXRS_CONTEXT_NAME, JaxrsContext)
-        JaxrsUtils.setupJaxrsContext(context, grailsApplication)
-        context.init();
+        // Update the jaxrs context and reinitialize it
+        JaxrsUtil.getInstance().setupJaxrsContext()
+        JaxrsUtil.getInstance().jaxrsContext.restart();
     }
 
     /**

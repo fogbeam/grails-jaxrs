@@ -152,7 +152,6 @@ dependencies {
     compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.4.5'
 
     testCompile 'org.grails.plugins:geb:1.0.1'
-    testCompile 'org.codehaus.groovy.modules.http-builder:http-builder:0.7.1'
     testCompile 'org.seleniumhq.selenium:selenium-firefox-driver:2.31.0'
     testCompile "com.sun.jersey:jersey-client:$jerseyVersion"
 }

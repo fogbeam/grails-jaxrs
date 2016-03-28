@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.jaxrs
+package org.grails.plugins.jaxrs.artefact
 
 import javax.ws.rs.ext.ExceptionMapper
 import javax.ws.rs.ext.MessageBodyReader
@@ -27,10 +27,10 @@ import javax.ws.rs.ext.MessageBodyWriter
  */
 class JaxrsClasses {
 
-    static jaxrsAnnotationCondition = {annotation -> annotation.toString().contains('javax.ws.rs')}
-    static jaxrsClassCondition      = {clazz      -> clazz.declaredAnnotations.any jaxrsAnnotationCondition}
-    static jaxrsMethodCondition     = {method     -> method.declaredAnnotations.any jaxrsAnnotationCondition}
-    static jaxrsMethodsCondition    = {clazz      -> clazz.declaredMethods.any jaxrsMethodCondition}
+    static jaxrsAnnotationCondition = { annotation -> annotation.toString().contains('javax.ws.rs') }
+    static jaxrsClassCondition = { clazz -> clazz.declaredAnnotations.any jaxrsAnnotationCondition }
+    static jaxrsMethodCondition = { method -> method.declaredAnnotations.any jaxrsAnnotationCondition }
+    static jaxrsMethodsCondition = { clazz -> clazz.declaredMethods.any jaxrsMethodCondition }
 
     /**
      * Returns <code>true</code> if the given class is a valid JAX-RS class,
@@ -42,7 +42,7 @@ class JaxrsClasses {
      * @return
      */
     static boolean isJaxrsResource(Class clazz) {
-        !isJaxrsProvider(clazz) && walkJaxrsResource(clazz,  JaxrsClasses.&isJaxrsNode )
+        !isJaxrsProvider(clazz) && walkJaxrsResource(clazz, JaxrsClasses.&isJaxrsNode)
     }
 
     static boolean isJaxrsNode(Class clazz) {
@@ -59,8 +59,8 @@ class JaxrsClasses {
      */
     static boolean isJaxrsProvider(Class clazz) {
         (MessageBodyReader.isAssignableFrom(clazz)) ||
-        (MessageBodyWriter.isAssignableFrom(clazz)) ||
-        (ExceptionMapper.isAssignableFrom(clazz))
+            (MessageBodyWriter.isAssignableFrom(clazz)) ||
+            (ExceptionMapper.isAssignableFrom(clazz))
     }
 
     /**
@@ -77,7 +77,7 @@ class JaxrsClasses {
             return false
         }
         return (visitor(clazz)
-                || walkJaxrsResource(clazz.superclass, visitor)
-                || clazz.interfaces.any {walkJaxrsResource(it, visitor)})
+            || walkJaxrsResource(clazz.superclass, visitor)
+            || clazz.interfaces.any { walkJaxrsResource(it, visitor) })
     }
 }

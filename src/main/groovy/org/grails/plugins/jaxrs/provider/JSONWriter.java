@@ -16,7 +16,6 @@
 package org.grails.plugins.jaxrs.provider;
 
 import grails.converters.JSON;
-import org.grails.plugins.jaxrs.support.MessageBodyWriterSupport;
 import org.grails.web.converters.configuration.ConvertersConfigurationHolder;
 
 import javax.ws.rs.Produces;

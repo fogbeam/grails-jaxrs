@@ -13,30 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.jaxrs.web;
+package org.grails.plugins.jaxrs.core
 
-import org.restlet.Application;
-import org.restlet.Context;
-import org.restlet.ext.jaxrs.InstantiateException;
-import org.restlet.ext.jaxrs.JaxRsApplication;
-import org.restlet.ext.jaxrs.ObjectFactory;
-import org.restlet.ext.servlet.ServerServlet;
-import org.springframework.context.ApplicationContext;
+import org.restlet.Application
+import org.restlet.Context
+import org.restlet.ext.jaxrs.InstantiateException
+import org.restlet.ext.jaxrs.JaxRsApplication
+import org.restlet.ext.jaxrs.ObjectFactory
+import org.restlet.ext.servlet.ServerServlet
+import org.springframework.context.ApplicationContext
 
-import javax.servlet.ServletContext;
-import java.util.Enumeration;
+import javax.servlet.ServletContext
 
-import static org.springframework.web.context.support.WebApplicationContextUtils.getRequiredWebApplicationContext;
+import static org.springframework.web.context.support.WebApplicationContextUtils.getRequiredWebApplicationContext
 
 /**
  * Servlet that dispatches JAX-RS requests to Restlet.
  *
  * @author Martin Krasser
  */
-@SuppressWarnings("serial")
-public class RestletServlet extends ServerServlet {
-
-    private JaxrsConfig config;
+class RestletServlet extends ServerServlet {
+    /**
+     * JAX-RS Application.
+     */
+    JaxrsApplicationConfig config
 
     /**
      * Creates a new {@link RestletServlet}
@@ -44,17 +44,8 @@ public class RestletServlet extends ServerServlet {
      * @param config
      *            JAX-RS configuration of the current {@link JaxrsContext}.
      */
-    public RestletServlet(JaxrsConfig config) {
-        this.config = config;
-    }
-
-    /**
-     * Returns the JAX-RS configuration.
-     *
-     * @return the JAX-RS configuration.
-     */
-    public JaxrsConfig getConfig() {
-        return config;
+    RestletServlet(JaxrsApplicationConfig config) {
+        this.config = config
     }
 
     //
@@ -66,16 +57,16 @@ public class RestletServlet extends ServerServlet {
      * servlet context.
      */
     @Override
-    @SuppressWarnings("unchecked")
-    public void destroy() {
-        Enumeration<String> names = getServletContext().getAttributeNames();
+    //@SuppressWarnings("unchecked")
+    void destroy() {
+        Enumeration<String> names = getServletContext().getAttributeNames()
         while (names.hasMoreElements()) {
-            String name = names.nextElement();
+            String name = names.nextElement()
             if (name.startsWith("org.restlet")) {
-                getServletContext().removeAttribute(name);
+                getServletContext().removeAttribute(name)
             }
         }
-        super.destroy();
+        super.destroy()
 
     }
 
@@ -90,23 +81,22 @@ public class RestletServlet extends ServerServlet {
      */
     @Override
     protected Application createApplication(Context parentContext) {
-        JaxRsApplication jaxRsApplication = new JaxRsApplication(parentContext.createChildContext());
-        jaxRsApplication.setObjectFactory(new ApplicationContextObjectFactory(getServletContext()));
-        jaxRsApplication.add(config);
-        return jaxRsApplication;
+        JaxRsApplication jaxRsApplication = new JaxRsApplication(parentContext.createChildContext())
+        jaxRsApplication.setObjectFactory(new ApplicationContextObjectFactory(getServletContext()))
+        jaxRsApplication.add(config)
+        return jaxRsApplication
     }
 
     private static class ApplicationContextObjectFactory implements ObjectFactory {
+        ApplicationContext applicationContext
 
-        ApplicationContext applicationContext;
-
-        public ApplicationContextObjectFactory(ServletContext servletContext) {
-            this.applicationContext = getRequiredWebApplicationContext(servletContext);
+        ApplicationContextObjectFactory(ServletContext servletContext) {
+            this.applicationContext = getRequiredWebApplicationContext(servletContext)
         }
 
         public <T> T getInstance(Class<T> jaxRsClass) throws InstantiateException {
             // TODO: make this implementation more robust (plus improved performance)
-            return (T)applicationContext.getBeansOfType(jaxRsClass).values().iterator().next();
+            return (T) applicationContext.getBeansOfType(jaxRsClass).values().iterator().next()
         }
     }
 }

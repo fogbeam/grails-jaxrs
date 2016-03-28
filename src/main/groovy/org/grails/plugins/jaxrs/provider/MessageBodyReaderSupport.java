@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.jaxrs.support;
+package org.grails.plugins.jaxrs.provider;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
@@ -24,14 +24,12 @@ import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
-import static org.grails.plugins.jaxrs.support.ProviderUtils.getReaderTypeArgument;
+import static org.grails.plugins.jaxrs.provider.ProviderUtils.getReaderTypeArgument;
 
 /**
  * Base class for simple message body readers.
  *
- * @param T
- *            type of object to be read from the request entity.
- *
+ * @param <T> type of object to be read from the request entity.
  * @author Martin Krasser
  */
 public abstract class MessageBodyReaderSupport<T> extends ProviderSupport implements MessageBodyReader<T> {
@@ -48,9 +46,9 @@ public abstract class MessageBodyReaderSupport<T> extends ProviderSupport implem
     }
 
     public T readFrom(Class<T> type, Type genericType,
-            Annotation[] annotations, MediaType mediaType,
-            MultivaluedMap<String, String> httpHeaders, InputStream entityStream)
-            throws IOException, WebApplicationException {
+                      Annotation[] annotations, MediaType mediaType,
+                      MultivaluedMap<String, String> httpHeaders, InputStream entityStream)
+        throws IOException, WebApplicationException {
         return readFrom(httpHeaders, entityStream);
     }
 
@@ -58,10 +56,8 @@ public abstract class MessageBodyReaderSupport<T> extends ProviderSupport implem
      * Reads the request entity from the input stream and returns an object of
      * type given by this class type parameter.
      *
-     * @param httpHeaders
-     *            HTTP request headers.
-     * @param entityStream
-     *            request entity input stream.
+     * @param httpHeaders  HTTP request headers.
+     * @param entityStream request entity input stream.
      * @return object representation of entity stream.
      * @throws IOException
      * @throws WebApplicationException

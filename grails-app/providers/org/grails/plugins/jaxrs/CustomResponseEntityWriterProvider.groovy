@@ -15,7 +15,7 @@
  */
 package org.grails.plugins.jaxrs
 
-import org.grails.plugins.jaxrs.support.MessageBodyWriterSupport
+import org.grails.plugins.jaxrs.provider.MessageBodyWriterSupport
 import org.grails.plugins.jaxrs.test.CustomResponseEntity
 
 import javax.ws.rs.Produces

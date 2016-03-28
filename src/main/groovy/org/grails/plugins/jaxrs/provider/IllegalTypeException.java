@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.jaxrs.support;
+package org.grails.plugins.jaxrs.provider;
 
 /**
  * Thrown to indicate that the type argument to {@link MessageBodyWriterSupport}

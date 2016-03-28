@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.jaxrs.web
+package org.grails.plugins.jaxrs.core
 
 import com.sun.jersey.api.core.DefaultResourceConfig
+import com.sun.jersey.api.core.PackagesResourceConfig
 import com.sun.jersey.api.core.ResourceConfig
 import com.sun.jersey.spi.container.servlet.WebConfig
 import com.sun.jersey.spi.spring.container.servlet.SpringServlet
-import org.grails.plugins.jaxrs.web.JaxrsContext.Config
 
-import javax.servlet.ServletConfig
 import javax.servlet.ServletException
 import javax.ws.rs.ext.Provider
 
@@ -31,31 +30,19 @@ import javax.ws.rs.ext.Provider
  * @author Martin Krasser
  * @author David Castro
  */
-@SuppressWarnings("serial")
 public class JerseyServlet extends SpringServlet {
-
-    private static final String PROVIDER_EXTRA_PATHS_KEY = "com.sun.jersey.config.property.packages"
-
-    private JaxrsConfig jaxrsConfig
-
-    JerseyServlet(JaxrsConfig jaxrsConfig) {
-        this.jaxrsConfig = jaxrsConfig
-    }
+    /**
+     * Application configuration.
+     */
+    private JaxrsApplicationConfig jaxrsConfig
 
     /**
-     * Initializes the Jersey servlet. If <code>config</code> is an instance of
-     * {@link Config} then Jersey is configured with extra paths for scanning
-     * {@link Provider} classes.
+     * Constructor.
      *
-     * @param servletConfig
-     * @see Config#getJaxrsProviderExtraPaths()
+     * @param jaxrsConfig
      */
-    @Override
-    void init(ServletConfig servletConfig) throws ServletException {
-        if (servletConfig instanceof Config) {
-            init((Config) servletConfig)
-        }
-        super.init(servletConfig)
+    JerseyServlet(JaxrsApplicationConfig jaxrsConfig) {
+        this.jaxrsConfig = jaxrsConfig
     }
 
     /**
@@ -64,17 +51,16 @@ public class JerseyServlet extends SpringServlet {
      * path is a semicolon-delimited list of packages which Jersey should scan
      * for additional {@link Provider} classes.
      *
-     * @see Config#getJaxrsProviderExtraPaths()
+     * @see JaxrsServletConfig#getExtraClassPaths()
      */
-    void init(Config config) {
-        String extra = config.getJaxrsProviderExtraPaths()
-        if (isExtraPathsDefined(extra) && !config.getInitParameters().containsKey(PROVIDER_EXTRA_PATHS_KEY)) {
-            config.getInitParameters().put(PROVIDER_EXTRA_PATHS_KEY, extra)
-        }
-    }
+    void init(JaxrsServletConfig servletConfig) {
+        String extra = servletConfig.getExtraClassPaths()
 
-    private static boolean isExtraPathsDefined(String extra) {
-        return extra != null && !extra.isEmpty()
+        if (extra && !servletConfig.getInitParameters().containsKey(PackagesResourceConfig.PROPERTY_PACKAGES)) {
+            servletConfig.getInitParameters().put(PackagesResourceConfig.PROPERTY_PACKAGES, extra)
+        }
+
+        super.init(servletConfig)
     }
 
     @Override

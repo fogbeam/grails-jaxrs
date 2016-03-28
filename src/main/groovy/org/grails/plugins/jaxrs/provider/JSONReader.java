@@ -17,8 +17,7 @@ package org.grails.plugins.jaxrs.provider;
 
 import grails.core.GrailsApplication;
 import grails.core.support.GrailsApplicationAware;
-import org.grails.plugins.jaxrs.support.ConverterUtils;
-import org.grails.plugins.jaxrs.support.MessageBodyReaderSupport;
+import org.grails.plugins.jaxrs.provider.ConverterUtils;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.WebApplicationException;
@@ -31,8 +30,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Map;
 
-import static org.grails.plugins.jaxrs.support.ConverterUtils.getDefaultEncoding;
-import static org.grails.plugins.jaxrs.support.ConverterUtils.jsonToMap;
+import static org.grails.plugins.jaxrs.provider.ConverterUtils.getDefaultEncoding;
+import static org.grails.plugins.jaxrs.provider.ConverterUtils.jsonToMap;
 
 /**
  * A message body reader that converts a JSON entity stream to a map than can be

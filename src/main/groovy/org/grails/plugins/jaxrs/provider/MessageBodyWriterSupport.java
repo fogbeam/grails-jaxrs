@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.jaxrs.support;
+package org.grails.plugins.jaxrs.provider;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
@@ -27,9 +27,7 @@ import java.lang.reflect.Type;
 /**
  * Base class for simple message body writers.
  *
- * @param T
- *            type of object to be written to the response entity.
- *
+ * @param <T> type of object to be written to the response entity.
  * @author Martin Krasser
  */
 public abstract class MessageBodyWriterSupport<T> extends ProviderSupport implements MessageBodyWriter<T> {
@@ -53,10 +51,10 @@ public abstract class MessageBodyWriterSupport<T> extends ProviderSupport implem
     }
 
     public void writeTo(T t, Class<?> type, Type genericType,
-            Annotation[] annotations, MediaType mediaType,
-            MultivaluedMap<String, Object> httpHeaders,
-            OutputStream entityStream) throws IOException,
-            WebApplicationException {
+                        Annotation[] annotations, MediaType mediaType,
+                        MultivaluedMap<String, Object> httpHeaders,
+                        OutputStream entityStream) throws IOException,
+        WebApplicationException {
         writeTo(t, httpHeaders, entityStream);
     }
 
@@ -64,12 +62,9 @@ public abstract class MessageBodyWriterSupport<T> extends ProviderSupport implem
      * Writes an object of type given by this class type parameter to the
      * response entity output stream.
      *
-     * @param t
-     *            object to be written.
-     * @param httpHeaders
-     *            HTTP response headers.
-     * @param entityStream
-     *            response entity output stream.
+     * @param t            object to be written.
+     * @param httpHeaders  HTTP response headers.
+     * @param entityStream response entity output stream.
      * @throws IOException
      * @throws WebApplicationException
      */

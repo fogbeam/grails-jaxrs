@@ -13,53 +13,48 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.jaxrs
+package org.grails.plugins.jaxrs.artefact
 
 import grails.core.ArtefactHandlerAdapter
 import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory
 
-import javax.ws.rs.ext.ExceptionMapper
-import javax.ws.rs.ext.MessageBodyReader
-import javax.ws.rs.ext.MessageBodyWriter
-
 /**
  * @author Martin Krasser
  */
-public class ProviderArtefactHandler extends ArtefactHandlerAdapter {
+public class ResourceArtefactHandler extends ArtefactHandlerAdapter {
+    private static Log LOG = null
 
-    private static Log LOG = null; //LogFactory.getLog(ProviderArtefactHandler.class);
+    public static final String TYPE = "Resource"
 
-    public static final String TYPE = "Provider";
-
-    public ProviderArtefactHandler() {
-        super(TYPE, GrailsProviderClass.class, DefaultGrailsProviderClass.class, TYPE);
+    public ResourceArtefactHandler() {
+        super(TYPE, GrailsResourceClass.class, DefaultGrailsResourceClass.class, TYPE)
     }
 
     /**
-     * Returns <code>true</code> if the <code>clazz</code> either implements
-     * {@link MessageBodyReader}, {@link MessageBodyWriter} or
-     * {@link ExceptionMapper}.
+     * Returns <code>true</code> if the <code>clazz</code> contains at least one
+     * JAX-RS annotation on class-level or method-level and none of the provider
+     * interfaces is implemented.
      *
      * @param clazz
-     * @return <code>true</code> if the class is a JAX-RS provider.
+     * @return <code>true</code> if the class is a JAX-RS resource.
      */
     @Override
     public boolean isArtefactClass(Class clazz) {
         if (clazz == null) {
             return false;
         }
-        boolean match = JaxrsClasses.isJaxrsProvider(clazz);
+        boolean match = JaxrsClasses.isJaxrsResource(clazz)
         if (match) {
-            getLogger().info("Detected JAX-RS provider: " + clazz.getName());
+            getLogger().info("Detected JAX-RS resource: " + clazz.getName())
         }
-        return match;
+        return match
     }
 
     private static Log getLogger() {
-        if(!LOG) {
-            LOG = LogFactory.getLog(ProviderArtefactHandler.class);
+        if (!LOG) {
+            LOG = LogFactory.getLog(ResourceArtefactHandler)
         }
-        return LOG;
+        return LOG
     }
 }

@@ -15,8 +15,6 @@
  */
 package org.grails.plugins.jaxrs.provider
 
-import org.grails.plugins.jaxrs.support.DomainObjectReaderSupport
-
 import javax.ws.rs.Consumes
 import javax.ws.rs.ext.Provider
 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.jaxrs.support
+package org.grails.plugins.jaxrs.provider
 
 import grails.core.GrailsApplication
 import grails.core.support.GrailsApplicationAware
@@ -28,8 +28,8 @@ import javax.ws.rs.ext.MessageBodyReader
 import java.lang.annotation.Annotation
 import java.lang.reflect.Type
 
-import static org.grails.plugins.jaxrs.support.ProviderUtils.isJsonType
-import static org.grails.plugins.jaxrs.support.ProviderUtils.isXmlType
+import static ProviderUtils.isJsonType
+import static ProviderUtils.isXmlType
 
 /**
  * A message body reader that converts an XML or JSON entity streams to a domain

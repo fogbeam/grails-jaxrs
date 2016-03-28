@@ -15,7 +15,7 @@
  */
 package org.grails.plugins.jaxrs
 
-import org.grails.plugins.jaxrs.support.MessageBodyReaderSupport
+import org.grails.plugins.jaxrs.provider.MessageBodyReaderSupport
 import org.grails.plugins.jaxrs.test.CustomRequestEntity
 
 import javax.ws.rs.Consumes

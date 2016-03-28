@@ -32,7 +32,6 @@ import javax.ws.rs.core.UriBuilder
  * @author Martin Krasser
  */
 class Responses {
-
      /**
       * Creates a response to a POST operation with status code 201,
       * an XML representation of the created resource as response entity

@@ -16,7 +16,7 @@
 package org.grails.plugins.jaxrs
 
 import grails.test.mixin.integration.Integration
-import org.grails.plugins.jaxrs.web.JaxrsContext
+import org.grails.plugins.jaxrs.core.JaxrsContext
 
 /**
  * @author Noam Y. Tenne

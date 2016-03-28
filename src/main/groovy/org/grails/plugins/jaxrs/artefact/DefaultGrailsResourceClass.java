@@ -13,25 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.jaxrs.web
+package org.grails.plugins.jaxrs.artefact;
 
-import javax.servlet.ServletContextEvent
-import javax.servlet.ServletContextListener
 
-import static org.grails.plugins.jaxrs.web.JaxrsUtils.getRequiredJaxrsContext
+import org.grails.core.AbstractInjectableGrailsClass;
 
 /**
- * Initializes a Jersey servlet for request processing.
- *
  * @author Martin Krasser
  */
+public class DefaultGrailsResourceClass extends AbstractInjectableGrailsClass implements GrailsResourceClass {
 
-public class JaxrsListener implements ServletContextListener {
-    public void contextDestroyed(ServletContextEvent event) {
-        getRequiredJaxrsContext(event.getServletContext()).destroy()
+    public static final String RESOURCE = "Resource";
+
+    public DefaultGrailsResourceClass(Class clazz) {
+        super(clazz, RESOURCE);
     }
 
-    public void contextInitialized(ServletContextEvent event) {
-        getRequiredJaxrsContext(event.getServletContext()).setJaxrsServletContext(event.servletContext)
+    public DefaultGrailsResourceClass(Class clazz, String trailingName) {
+        super(clazz, trailingName);
     }
 }

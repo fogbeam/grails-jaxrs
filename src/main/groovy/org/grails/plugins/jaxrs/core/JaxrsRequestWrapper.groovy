@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.jaxrs.web;
+package org.grails.plugins.jaxrs.core
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletRequestWrapper
 
 /**
  * A request wrapper that decorates {@link HttpServletRequest#getRequestURI()}.
@@ -25,10 +25,14 @@ import javax.servlet.http.HttpServletRequestWrapper;
  *
  * @see JaxrsFilter
  */
-public class RequestWrapper extends HttpServletRequestWrapper {
-
-    public RequestWrapper(HttpServletRequest request) {
-        super(request);
+class JaxrsRequestWrapper extends HttpServletRequestWrapper {
+    /**
+     * Constructor.
+     *
+     * @param request
+     */
+    JaxrsRequestWrapper(HttpServletRequest request) {
+        super(request)
     }
 
     /**
@@ -37,11 +41,11 @@ public class RequestWrapper extends HttpServletRequestWrapper {
      *
      * @return the request URI.
      *
-     * @see JaxrsUtils#REQUEST_URI_ATTRIBUTE_NAME
+     * @see JaxrsUtil#REQUEST_URI_ATTRIBUTE_NAME
      */
     @Override
-    public String getRequestURI() {
-        return JaxrsUtils.getRequestUriAttribute(getRequest());
+    String getRequestURI() {
+        return JaxrsUtil.getInstance().getRequestUriAttribute(getRequest())
     }
 
     /**
@@ -50,7 +54,7 @@ public class RequestWrapper extends HttpServletRequestWrapper {
      * @return an empty string.
      */
     @Override
-    public String getServletPath() {
-        return "";
+    String getServletPath() {
+        return ''
     }
 }

@@ -16,8 +16,9 @@
 package org.grails.plugins.jaxrs
 
 import grails.test.mixin.TestFor
-import org.grails.plugins.jaxrs.web.JaxrsContext
-import org.grails.plugins.jaxrs.web.JaxrsUtils
+import org.grails.plugins.jaxrs.core.JaxrsUtil
+import org.grails.plugins.jaxrs.core.JaxrsContext
+
 import org.springframework.mock.web.MockHttpServletResponse
 import spock.lang.Specification
 
@@ -33,6 +34,7 @@ import javax.servlet.http.HttpServletResponse
 @TestFor(JaxrsController)
 class JaxrsControllerSpec extends Specification {
     JaxrsContext jaxrsContext
+    JaxrsUtil jaxrsUtil
     HttpServlet httpServlet
 
     def setup() {
@@ -49,15 +51,22 @@ class JaxrsControllerSpec extends Specification {
         }
 
         jaxrsContext = new JaxrsContext()
-        jaxrsContext.init(httpServlet)
-
+        jaxrsContext.initServlet(httpServlet)
         controller.jaxrsContext = jaxrsContext
+
+        jaxrsUtil = new JaxrsUtil()
+        JaxrsUtil._instance = jaxrsUtil
+        controller.jaxrsUtil = jaxrsUtil
+    }
+
+    def cleanup() {
+        JaxrsUtil._instance = null
     }
 
     def 'Ensure requests get handed off correctly'() {
         setup:
         controller.request.method = 'GET'
-        JaxrsUtils.setRequestUriAttribute(controller.request, '/test')
+        jaxrsUtil.setRequestUriAttribute(controller.request, '/test')
 
         when:
         controller.handle()
