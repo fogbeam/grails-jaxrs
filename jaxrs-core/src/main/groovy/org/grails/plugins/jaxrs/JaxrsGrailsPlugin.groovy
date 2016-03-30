@@ -7,7 +7,6 @@ import org.grails.plugins.jaxrs.core.JaxrsContext
 import org.grails.plugins.jaxrs.core.JaxrsFilter
 import org.grails.plugins.jaxrs.core.JaxrsListener
 import org.grails.plugins.jaxrs.core.JaxrsUtil
-import org.grails.plugins.jaxrs.generator.CodeGenerator
 import org.grails.plugins.jaxrs.provider.*
 import org.springframework.boot.context.embedded.FilterRegistrationBean
 import org.springframework.boot.context.embedded.ServletListenerRegistrationBean
@@ -130,8 +129,6 @@ Apache Wink are likely to be added in upcoming versions of the plugin.
                 filter = bean(JaxrsFilter)
                 order = Ordered.HIGHEST_PRECEDENCE + 10
             }
-
-            "${CodeGenerator.name}"(CodeGenerator)
 
             jaxrsContext(JaxrsContext) {
                 jaxrsServletFactory = ref('jaxrsServletFactory')
