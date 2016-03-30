@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011 the original author or authors.
+ * Copyright 2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,86 +13,50 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import org.grails.cli.interactive.completers.DomainClassCompleter
 
-import grails.util.GrailsNameUtils
-
-/**
- * @author Martin Krasser
- */
-
-includeTargets << grailsScript("_GrailsBootstrap")
-includeTargets << grailsScript("_GrailsCreateArtifacts")
-
-artifactDescription = null
-generateForName = null
-
-target(generateResources: "Generates JAX-RS resource and CRUD service classes for domain classes") {
-    depends( checkVersion, parseArguments, packageApp )
-
-    promptForName(type: "Domain Class")
-
-    try {
-        def name = argsMap["params"][0]
-        if (!name || name == "*") {
-            generateForAllDomainClasses()
-        } else {
-            generateForName = name
-            generateForOneDomainClass()
-        }
-    } catch(Exception e) {
-        logError("Error running generate-resources", e)
-        exit(1)
-    }
+description("Generates JAX-RS resource and CRUD service classes for domain classese") {
+    usage "grails generate-resources [DOMAIN CLASS]"
+    argument name: 'Domain Class', description: "The fully-qualified name of a domain class to generate sources for", required: true
+    completer DomainClassCompleter
+    flag name: 'force', description: "Whether to overwrite existing files"
 }
 
-target(generateForOneDomainClass: "Generates JAX-RS resource and CRUD service classes for one domain class.") {
-    depends(loadApp, bootstrap)
-
-    def name = generateForName
-    name = name.indexOf('.') > -1 ? name : GrailsNameUtils.getClassNameRepresentation(name)
-    def domainClass = grailsApp.getDomainClass(name)
-
-    if(!domainClass) {
-        println "Domain class not found in grails-app/domain, trying hibernate mapped classes..."
-        domainClass = grailsApp.getDomainClass(name)
-    }
-
-    if(domainClass) {
-        generateForDomainClass(domainClass)
-        event("StatusFinal", ["Finished generation of JAX-RS resource and CRUD service classes for domain class ${domainClass.fullName}"])
-    }
-    else {
-        event("StatusFinal", ["No domain class found for name ${name}. Please try again and enter a valid domain class name"])
-    }
+if (!args) {
+    error "No domain class(es) specified"
 }
 
-target(generateForAllDomainClasses: "Generates JAX-RS resource and CRUD service classes for all domain classes.") {
-    depends(loadApp, bootstrap)
+boolean force = flag('force')
 
-    def domainClasses = grailsApp.domainClasses
-
-    if (!domainClasses) {
-        println "No domain classes found in grails-app/domain, trying hibernate mapped classes..."
-        domainClasses = grailsApp.domainClasses
-    }
-
-    if (domainClasses) {
-        domainClasses.each { domainClass ->
-            generateForDomainClass(domainClass)
-        }
-        event("StatusFinal", ["Finished generation of JAX-RS resource and CRUD service classes for domain classes"])
-    }
-    else {
-        event("StatusFinal", ["No domain classes found"])
-    }
+def classNames = args
+if (args.size() == 1 && args[0] == '*') {
+    classNames = resources("file:grails-app/domain/**/*.groovy").collect { className(it) }
 }
 
-def generateForDomainClass(domainClass) {
-    def codeGenerator = appCtx.getBean('org.grails.jaxrs.generator.CodeGenerator')
-    codeGenerator.pluginDir = jaxrsPluginDir
-    event("StatusUpdate", ["Generating JAX-RS resource and CRUD service classes for domain class ${domainClass.fullName}"])
-    codeGenerator.generate(domainClass, basedir)
-    event("GenerateResourcesEnd", [domainClass.fullName])
-}
+classNames.each { className ->
+    def sourceClass = source(className)
 
-setDefaultTarget generateResources
+    if (!sourceClass) {
+        error "Domain class not found for name $className"
+        return
+    }
+
+    def model = model(sourceClass)
+
+    render template: template('scaffolding/CollectionResource.groovy'),
+        destination: file("grails-app/resources/${model.packagePath}/${model.convention('CollectionResource')}.groovy"),
+        model: model,
+        overwrite: force
+
+    render template: template('scaffolding/Resource.groovy'),
+        destination: file("grails-app/resources/${model.packagePath}/${model.convention('Resource')}.groovy"),
+        model: model,
+        overwrite: force
+
+    render template: template('scaffolding/ResourceService.groovy'),
+        destination: file("grails-app/services/${model.packagePath}/${model.convention('ResourceService')}.groovy"),
+        model: model,
+        overwrite: force
+
+    addStatus "Scaffolding completed for ${projectPath(sourceClass)}"
+}

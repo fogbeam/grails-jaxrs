@@ -13,24 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 description("Creates a new JAX-Rs resource") {
     usage "grails create-resource [RESOURCE NAME]"
     argument name: 'Resource Name', description: "The name of the resource"
+    flag name: 'force', description: "Whether to overwrite existing files"
 }
+
+boolean force = flag('force')
 
 model = model(args[0])
 
-def data = [
-    packagePath : model.packagePath,
-    packageName : model.packageName,
-    resourceName: model.simpleName
-]
-if (data.resourceName.endsWith('Resource')) {
-    model.resourceName -= 'Resource'
-}
-data.resourcePath = data.resourceName.toLowerCase()
-
 render template: "artifacts/Resource.groovy",
-    destination: file("grails-app/resources/$data.packagePath/${data.resourceName}Resource.groovy"),
-    model: data
+    destination: file("grails-app/resources/$model.packagePath/${model.convention('Resource')}.groovy"),
+    model: model,
+    overwrite: force
