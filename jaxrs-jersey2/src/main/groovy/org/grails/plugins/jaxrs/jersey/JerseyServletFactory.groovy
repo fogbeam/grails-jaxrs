@@ -1,8 +1,7 @@
 package org.grails.plugins.jaxrs.jersey
 
-import com.sun.jersey.api.core.PackagesResourceConfig
-import com.sun.jersey.spi.spring.container.servlet.SpringServlet
 import grails.core.GrailsApplication
+import org.glassfish.jersey.servlet.ServletContainer
 import org.grails.plugins.jaxrs.core.JaxrsApplicationConfig
 import org.grails.plugins.jaxrs.core.JaxrsServletConfig
 import org.grails.plugins.jaxrs.servlet.ServletFactory
@@ -10,13 +9,13 @@ import org.grails.plugins.jaxrs.servlet.ServletFactory
 import javax.servlet.Servlet
 
 /**
- * A servlet factory that handles the Jersey 1.x JAX-RS implementation.
+ * A servlet factory that handles the Restlet JAX-RS implementation.
  *
  * @author Bud Byrd
  */
 class JerseyServletFactory implements ServletFactory {
     /**
-     * Grails Application bean.
+     * Grails application bean.
      */
     GrailsApplication grailsApplication
 
@@ -31,7 +30,7 @@ class JerseyServletFactory implements ServletFactory {
     Servlet createServlet(JaxrsApplicationConfig applicationConfig, JaxrsServletConfig servletConfig) {
         setupServletConfig(servletConfig)
 
-        return new SpringServlet()
+        return new ServletContainer()
     }
 
     /**
@@ -42,7 +41,7 @@ class JerseyServletFactory implements ServletFactory {
      */
     @Override
     String getRuntimeDelegateClassName() {
-        return "com.sun.jersey.server.impl.provider.RuntimeDelegateImpl"
+        return 'org.glassfish.jersey.server.internal.RuntimeDelegateImpl'
     }
 
     /**

@@ -2,7 +2,7 @@
 grails:
     profile: web-plugin
     codegen:
-        defaultPackage: jaxrs.jersey2
+        defaultPackage: org.grails.plugins.jaxrs
     spring:
         transactionManagement:
             proxies: false

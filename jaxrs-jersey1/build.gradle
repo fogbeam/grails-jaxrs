@@ -11,9 +11,6 @@ buildscript {
     }
 }
 
-version "0.1"
-group "jaxrs.jersey1"
-
 apply plugin:"eclipse"
 apply plugin:"idea"
 apply plugin:"org.grails.grails-plugin"
@@ -23,6 +20,7 @@ apply plugin:"org.grails.grails-gsp"
 ext {
     grailsVersion = project.grailsVersion
     gradleWrapperVersion = project.gradleWrapperVersion
+    jerseyVersion = '1.19'
 }
 
 repositories {
@@ -38,8 +36,6 @@ dependencyManagement {
 }
 
 dependencies {
-    String jerseyVersion = '1.19'
-
     compile "org.springframework.boot:spring-boot-starter-logging"
     compile "org.springframework.boot:spring-boot-autoconfigure"
     compile "org.grails:grails-core"
@@ -59,65 +55,13 @@ dependencies {
     testRuntime "net.sourceforge.htmlunit:htmlunit:2.18"
 
     compile project(':jaxrs-core')
-
-    compile("com.sun.jersey:jersey-core:$jerseyVersion") {
-        exclude module: 'jaxb-api'
-        exclude module: 'jsr311-api'
-        exclude module: 'junit'
-        exclude module: 'mail'
-        exclude module: 'org.osgi.core'
-    }
-
-    compile("com.sun.jersey:jersey-servlet:$jerseyVersion") {
-        exclude module: 'ant'
-        exclude module: 'commons-io'
-        exclude module: 'javax.ejb'
-        exclude module: 'javax.servlet-api'
-        exclude module: 'jsp-api'
-        exclude module: 'junit'
-        exclude module: 'osgi_R4_core'
-        exclude module: 'persistence-api'
-        exclude module: 'weld-osgi-bundle'
-    }
-
-    compile("com.sun.jersey:jersey-server:$jerseyVersion") {
-        exclude module: 'asm'
-        exclude module: 'commons-io'
-        exclude module: 'jaxb-api'
-        exclude module: 'jsr250-api'
-        exclude module: 'junit'
-        exclude module: 'mail'
-        exclude module: 'osgi_R4_core'
-    }
-
-    compile("com.sun.jersey:jersey-json:$jerseyVersion") {
-        exclude module: 'jackson-core-asl'
-        exclude module: 'jackson-jaxrs'
-        exclude module: 'jackson-mapper-asl'
-        exclude module: 'jackson-xc'
-        exclude module: 'jaxb-impl'
-        exclude module: 'jettison'
-        exclude module: 'junit'
-        exclude module: 'org.eclipse.persistence.moxy'
-    }
-
-    compile("com.sun.jersey.contribs:jersey-spring:$jerseyVersion") {
-        exclude module: 'jaxb-impl'
-        exclude module: 'jsr250-api'
-        exclude module: 'junit'
-        exclude module: 'servlet-api'
-        exclude module: 'testng'
-        exclude module: 'spring-core'
-        exclude module: 'spring-beans'
-        exclude module: 'spring-context'
-        exclude module: 'spring-web'
-        exclude module: 'spring-aop'
-    }
+    compile "com.sun.jersey.contribs:jersey-spring:$jerseyVersion"
 }
 
 task wrapper(type: Wrapper) {
     gradleVersion = gradleWrapperVersion
 }
+
 grailsPublish {
     // TODO: Provide values here
     user = 'user'

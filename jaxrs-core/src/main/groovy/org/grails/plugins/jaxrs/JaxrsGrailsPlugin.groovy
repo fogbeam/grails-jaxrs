@@ -9,7 +9,6 @@ import org.grails.plugins.jaxrs.core.JaxrsListener
 import org.grails.plugins.jaxrs.core.JaxrsUtil
 import org.grails.plugins.jaxrs.generator.CodeGenerator
 import org.grails.plugins.jaxrs.provider.*
-import org.grails.plugins.jaxrs.servlet.jersey.JerseyServletFactory
 import org.springframework.boot.context.embedded.FilterRegistrationBean
 import org.springframework.boot.context.embedded.ServletListenerRegistrationBean
 import org.springframework.core.Ordered
@@ -136,12 +135,6 @@ Apache Wink are likely to be added in upcoming versions of the plugin.
 
             jaxrsContext(JaxrsContext) {
                 jaxrsServletFactory = ref('jaxrsServletFactory')
-            }
-
-            // TODO: remove this!!! or at least make this intelligent if the implementations
-            // are going to stay bundled in the plugin (which I hope they're not).
-            jaxrsServletFactory(JerseyServletFactory) { bean ->
-                bean.autowire = true
             }
 
             "${JaxrsUtil.BEAN_NAME}"(JaxrsUtil) { bean ->
