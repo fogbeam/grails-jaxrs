@@ -1,4 +1,4 @@
-package org.grails.plugins.jaxrs.test
+package org.grails.plugins.jaxrs.support
 
 import javax.ws.rs.GET
 import javax.ws.rs.Path

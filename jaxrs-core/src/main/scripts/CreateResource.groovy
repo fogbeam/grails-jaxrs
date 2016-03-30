@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011 the original author or authors.
+ * Copyright 2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,23 @@
  * limitations under the License.
  */
 
-/**
- * @author Martin Krasser
- */
-
-includeTargets << grailsScript("_GrailsInit")
-includeTargets << grailsScript("_GrailsCreateArtifacts")
-
-target(createResource: "Creates a new JAX-RS resource class") {
-
-    depends(checkVersion, parseArguments)
-
-    def type = "Resource"
-    promptForName(type: type)
-
-    for (name in argsMap["params"]) {
-        name = purgeRedundantArtifactSuffix(name, type)
-        createArtifact(name: name, suffix: type, type: type, path: "grails-app/resources")
-        createUnitTest(name: name, suffix: type)
-    }
+description("Creates a new JAX-Rs resource") {
+    usage "grails create-resource [RESOURCE NAME]"
+    argument name: 'Resource Name', description: "The name of the resource"
 }
 
-setDefaultTarget createResource
+model = model(args[0])
+
+def data = [
+    packagePath : model.packagePath,
+    packageName : model.packageName,
+    resourceName: model.simpleName
+]
+if (data.resourceName.endsWith('Resource')) {
+    model.resourceName -= 'Resource'
+}
+data.resourcePath = data.resourceName.toLowerCase()
+
+render template: "artifacts/Resource.groovy",
+    destination: file("grails-app/resources/$data.packagePath/${data.resourceName}Resource.groovy"),
+    model: data

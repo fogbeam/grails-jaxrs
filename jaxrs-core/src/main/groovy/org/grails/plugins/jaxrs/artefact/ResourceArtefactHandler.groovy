@@ -44,7 +44,7 @@ public class ResourceArtefactHandler extends ArtefactHandlerAdapter {
         if (clazz == null) {
             return false;
         }
-        boolean match = JaxrsClasses.isJaxrsResource(clazz)
+        boolean match = JaxrsClassHelper.isJaxrsResource(clazz)
         if (match) {
             getLogger().info("Detected JAX-RS resource: " + clazz.getName())
         }

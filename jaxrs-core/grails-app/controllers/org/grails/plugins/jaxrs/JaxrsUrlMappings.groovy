@@ -1,3 +1,4 @@
+package org.grails.plugins.jaxrs
 /*
  * Copyright 2009, 2016 the original author or authors.
  *
@@ -42,7 +43,7 @@ class JaxrsUrlMappings {
      * Create URL mappings for all resources.
      */
     static mappings = { ApplicationContext applicationContext ->
-        Logger logger = LoggerFactory.getLogger("org.grails.plugins.jaxrs.JaxrsUrlMappings")
+        Logger logger = LoggerFactory.getLogger(JaxrsUrlMappings)
 
         logger.debug('URL mappings for JaxrsController:')
         JaxrsUtil.getInstance(applicationContext).retrieveRootPathList().each { pattern ->

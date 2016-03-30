@@ -18,6 +18,8 @@ package org.grails.plugins.jaxrs.artefact
 import javax.ws.rs.ext.ExceptionMapper
 import javax.ws.rs.ext.MessageBodyReader
 import javax.ws.rs.ext.MessageBodyWriter
+import java.lang.annotation.Annotation
+import java.lang.reflect.Method
 
 /**
  * Provides condition methods to determine whether a given class is a valid
@@ -25,12 +27,46 @@ import javax.ws.rs.ext.MessageBodyWriter
  *
  * @author Martin Krasser
  */
-class JaxrsClasses {
+class JaxrsClassHelper {
+    /**
+     * Determines whether a given annotation can be considered a JAX-RS annotation.
+     *
+     * @param annotation
+     * @return
+     */
+    static boolean jaxrsAnnotationCondition(Annotation annotation) {
+        return annotation.toString().contains('javax.ws.rs')
+    }
 
-    static jaxrsAnnotationCondition = { annotation -> annotation.toString().contains('javax.ws.rs') }
-    static jaxrsClassCondition = { clazz -> clazz.declaredAnnotations.any jaxrsAnnotationCondition }
-    static jaxrsMethodCondition = { method -> method.declaredAnnotations.any jaxrsAnnotationCondition }
-    static jaxrsMethodsCondition = { clazz -> clazz.declaredMethods.any jaxrsMethodCondition }
+    /**
+     * Determiunes whether a class has any JAX-RS annotations.
+     *
+     * @param clazz
+     * @return
+     */
+    static boolean jaxrsClassCondition(Class<?> clazz) {
+        return clazz.declaredAnnotations.any { jaxrsAnnotationCondition it }
+    }
+
+    /**
+     * Determines whether a method has any JAX-RS annotations.
+     *
+     * @param method
+     * @return
+     */
+    static boolean jaxrsMethodCondition(Method method) {
+        return method.declaredAnnotations.any { jaxrsAnnotationCondition it }
+    }
+
+    /**
+     * Determines whether a class has any methods that have any JAX-RS annotations.
+     *
+     * @param clazz
+     * @return
+     */
+    static boolean jaxrsMethodsCondition(Class<?> clazz) {
+        return clazz.declaredMethods.any { jaxrsMethodCondition it }
+    }
 
     /**
      * Returns <code>true</code> if the given class is a valid JAX-RS class,
@@ -42,9 +78,16 @@ class JaxrsClasses {
      * @return
      */
     static boolean isJaxrsResource(Class clazz) {
-        !isJaxrsProvider(clazz) && walkJaxrsResource(clazz, JaxrsClasses.&isJaxrsNode)
+        !isJaxrsProvider(clazz) && walkJaxrsResource(clazz, JaxrsClassHelper.&isJaxrsNode)
     }
 
+    /**
+     * Returns whether the given class has JAX-RS annotations or has methods
+     * that have JAX-RS annotations.
+     *
+     * @param clazz
+     * @return
+     */
     static boolean isJaxrsNode(Class clazz) {
         jaxrsClassCondition(clazz) || jaxrsMethodsCondition(clazz)
     }
@@ -76,8 +119,10 @@ class JaxrsClasses {
         if (!clazz) {
             return false
         }
-        return (visitor(clazz)
-            || walkJaxrsResource(clazz.superclass, visitor)
-            || clazz.interfaces.any { walkJaxrsResource(it, visitor) })
+
+        return (visitor(clazz) ||
+            walkJaxrsResource(clazz.superclass, visitor) ||
+            clazz.interfaces.any { walkJaxrsResource(it, visitor) }
+        )
     }
 }

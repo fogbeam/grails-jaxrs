@@ -48,7 +48,7 @@ public class ProviderArtefactHandler extends ArtefactHandlerAdapter {
         if (clazz == null) {
             return false
         }
-        boolean match = JaxrsClasses.isJaxrsProvider(clazz)
+        boolean match = JaxrsClassHelper.isJaxrsProvider(clazz)
         if (match) {
             getLogger().info("Detected JAX-RS provider: " + clazz.getName())
         }

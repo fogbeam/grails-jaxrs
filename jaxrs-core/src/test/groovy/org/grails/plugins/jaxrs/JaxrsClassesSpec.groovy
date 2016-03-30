@@ -17,8 +17,15 @@ package org.grails.plugins.jaxrs
 
 import grails.test.mixin.TestMixin
 import grails.test.mixin.support.GrailsUnitTestMixin
-import org.grails.plugins.jaxrs.artefact.JaxrsClasses
-import org.grails.plugins.jaxrs.test.*
+import org.grails.plugins.jaxrs.artefact.JaxrsClassHelper
+import org.grails.plugins.jaxrs.support.TestA
+import org.grails.plugins.jaxrs.support.TestB
+import org.grails.plugins.jaxrs.support.TestC
+import org.grails.plugins.jaxrs.support.TestD
+import org.grails.plugins.jaxrs.support.TestE
+import org.grails.plugins.jaxrs.support.TestH1B
+import org.grails.plugins.jaxrs.support.TestH2B
+import org.grails.plugins.jaxrs.support.TestH3B
 import spock.lang.Specification
 
 /**
@@ -29,21 +36,21 @@ import spock.lang.Specification
 class JaxrsClassesSpec extends Specification {
     def 'Ensure resources are correctly identified as resources'() {
         expect:
-        JaxrsClasses.isJaxrsResource(TestA)
-        JaxrsClasses.isJaxrsResource(TestB)
-        JaxrsClasses.isJaxrsResource(TestC)
+        JaxrsClassHelper.isJaxrsResource(TestA)
+        JaxrsClassHelper.isJaxrsResource(TestB)
+        JaxrsClassHelper.isJaxrsResource(TestC)
     }
 
     def 'Ensure that objects that are not resources are not identified as resources'() {
         expect:
-        !JaxrsClasses.isJaxrsResource(TestD)
-        !JaxrsClasses.isJaxrsResource(TestE)
+        !JaxrsClassHelper.isJaxrsResource(TestD)
+        !JaxrsClassHelper.isJaxrsResource(TestE)
     }
 
     def 'Ensure that resources whose parents are resources are correctly identified as resources'() {
         expect:
-        JaxrsClasses.isJaxrsResource(TestH1B)
-        !JaxrsClasses.isJaxrsResource(TestH2B)
-        JaxrsClasses.isJaxrsResource(TestH3B)
+        JaxrsClassHelper.isJaxrsResource(TestH1B)
+        !JaxrsClassHelper.isJaxrsResource(TestH2B)
+        JaxrsClassHelper.isJaxrsResource(TestH3B)
     }
 }
