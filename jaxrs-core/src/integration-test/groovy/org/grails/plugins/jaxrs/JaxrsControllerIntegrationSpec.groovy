@@ -15,55 +15,77 @@
  */
 package org.grails.plugins.jaxrs
 
-import geb.spock.GebSpec
-import org.grails.plugins.jaxrs.support.JerseyClientTrait
-import org.grails.plugins.jaxrs.support.JerseyClientTrait.RequestProperties
+import grails.test.mixin.integration.Integration
+import org.grails.plugins.jaxrs.resources.*
+import org.grails.plugins.jaxrs.support.MockedEnvironmentSpec
+import org.springframework.beans.factory.annotation.Autowired
 import spock.lang.Unroll
 
 /**
  * @author Noam Y. Tenne
  */
-abstract class JaxrsControllerIntegrationSpec extends GebSpec implements JerseyClientTrait {
-    def grailsUrlMappingsHolder
+@Integration
+class JaxrsControllerIntegrationSpec extends MockedEnvironmentSpec {
+    /**
+     * Grails application bean.
+     */
     def grailsApplication
 
-    def setup() {
-        grailsUrlMappingsHolder.addMappings {
-            "/test"(controller: 'jaxrs')
-            "/test/**"(controller: 'jaxrs')
-        }
+    /**
+     * Return the list of resources to build the JAX-RS servlet with.
+     *
+     * @return
+     */
+    @Override
+    List getResources() {
+        return [
+            CustomResponseEntityWriterProvider,
+            CustomRequestEntityReaderProvider,
+            Test01Resource,
+            Test02Resource,
+            Test03Resource,
+            Test04Resource,
+            Test05Resource,
+            Test06Resource,
+            TestQueryParamResource
+        ]
     }
 
     def "Execute a GET request"() {
         when:
-        def response = makeGetRequest(new RequestProperties(uri: "${browser.baseUrl}/test/01"))
-
-        then:
-        response.status == 200
-        response.contentType == 'text/plain'
-        response.body == 'test01'
-    }
-
-    def "Execute a POST request on resource 02"() {
-        when:
-        def response = makePostRequest(new RequestProperties(
-            uri: "${browser.baseUrl}/test/02",
-            contentType: 'text/plain',
-            body: 'hello'
+        def response = makeRequest(new RequestProperties(
+            uri: '/test/01',
+            method: 'GET'
         ))
 
         then:
         response.status == 200
         response.contentType == 'text/plain'
-        response.body == 'response:hello'
+        response.bodyAsString == 'test01'
+    }
+
+    def "Execute a POST request on resource 02"() {
+        when:
+        def response = makeRequest(new RequestProperties(
+            uri: '/test/02',
+            method: 'POST',
+            contentType: 'text/plain',
+            body: 'hello'.bytes
+        ))
+
+        then:
+        response.status == 200
+        response.contentType == 'text/plain'
+        response.bodyAsString == 'response:hello'
     }
 
     def "Execute a POST request on resource 03"() {
         when:
-        def response = makePostRequest(new RequestProperties(
-            uri: "${browser.baseUrl}/test/03",
+        def response = makeRequest(new RequestProperties(
+            uri: '/test/03',
+            method: 'POST',
             contentType: 'application/json',
-            body: '{"age":38,"name":"mike"}'
+            body: '{"age":38,"name":"mike"}'.bytes
         ))
 
         then:
@@ -77,47 +99,50 @@ abstract class JaxrsControllerIntegrationSpec extends GebSpec implements JerseyC
 
     def "Execute a POST request on resource 06"() {
         when:
-        def response = makePostRequest(new RequestProperties(
-            uri: "${browser.baseUrl}/test/06",
+        def response = makeRequest(new RequestProperties(
+            uri: '/test/06',
+            method: 'POST',
             contentType: 'application/json',
             accept: 'application/xml',
-            body: '{"age":38,"name":"mike"}'
+            body: '{"age":38,"name":"mike"}'.bytes
         ))
 
         then:
         response.status == 200
         response.contentType == 'application/xml'
 
-        def data = parseXml(response.body)
+        def data = parseXml(response.bodyAsString)
         data['age'].text() == '39'
         data['name'].text() == 'ekim'
     }
 
     def "Initiate a single round-trip on resource 04 for content type application/xml"() {
         when:
-        def response = makePostRequest(new RequestProperties(
-            uri: "${browser.baseUrl}/test/04/single",
+        def response = makeRequest(new RequestProperties(
+            uri: '/test/04/single',
+            method: 'POST',
             contentType: 'application/xml',
             accept: 'application/xml',
-            body: '<testPerson><name>james</name></testPerson>'
+            body: '<testPerson><name>james</name></testPerson>'.bytes
         ))
 
         then:
         response.status == 200
         response.contentType == 'application/xml'
 
-        def data = parseXml(response.body)
+        def data = parseXml(response.bodyAsString)
         data['name'].text() == 'semaj'
     }
 
     @Unroll
     def "Initiate a single round-trip on resource 04 for content type application/json"() {
         when:
-        def response = makePostRequest(new RequestProperties(
-            uri: "${browser.baseUrl}/test/04/single",
+        def response = makeRequest(new RequestProperties(
+            uri: '/test/04/single',
+            method: 'POST',
             contentType: 'application/json',
             accept: 'application/json',
-            body: '{"class":"TestPerson","age":25,"name":"james"}'
+            body: '{"class":"TestPerson","age":25,"name":"james"}'.bytes
         ))
 
         then:
@@ -135,17 +160,18 @@ abstract class JaxrsControllerIntegrationSpec extends GebSpec implements JerseyC
         grailsApplication.config.org.grails.jaxrs.dowriter.require.generic.collections = genericOnly
 
         when:
-        def response = makeGetRequest(new RequestProperties(
-            uri: "${browser.baseUrl}/test/04/multi/generic",
+        def response = makeRequest(new RequestProperties(
+            uri: '/test/04/multi/generic',
+            method: 'GET',
             accept: 'application/xml'
         ))
 
         then:
         response.contentType == 'application/xml'
 
-        response.body.contains('<list>')
-        response.body.contains('<name>n1</name>')
-        response.body.contains('<name>n2</name>')
+        response.bodyAsString.contains('<list>')
+        response.bodyAsString.contains('<name>n1</name>')
+        response.bodyAsString.contains('<name>n2</name>')
 
         where:
         genericOnly << [true, false]
@@ -154,8 +180,9 @@ abstract class JaxrsControllerIntegrationSpec extends GebSpec implements JerseyC
     @Unroll
     def "Retrieve a raw and object XML collection from resource 04 with mode #mode"() {
         when:
-        def response = makeGetRequest(new RequestProperties(
-            uri: "${browser.baseUrl}/test/04/multi/$mode",
+        def response = makeRequest(new RequestProperties(
+            uri: "/test/04/multi/$mode",
+            method: 'GET',
             accept: 'application/xml'
         ))
 
@@ -163,9 +190,9 @@ abstract class JaxrsControllerIntegrationSpec extends GebSpec implements JerseyC
         response.status == 200
         response.contentType == 'application/xml'
 
-        response.body.contains('<list>')
-        response.body.contains('<name>n1</name>')
-        response.body.contains('<name>n2</name>')
+        response.bodyAsString.contains('<list>')
+        response.bodyAsString.contains('<name>n1</name>')
+        response.bodyAsString.contains('<name>n2</name>')
 
         where:
         mode << ['raw', 'object']
@@ -173,51 +200,55 @@ abstract class JaxrsControllerIntegrationSpec extends GebSpec implements JerseyC
 
     def "Retrieve a generic JSON collection from resource 04"() {
         when:
-        def response = makeGetRequest(new RequestProperties(
-            uri: "${browser.baseUrl}/test/04/multi/generic",
+        def response = makeRequest(new RequestProperties(
+            uri: '/test/04/multi/generic',
+            method: 'GET',
             accept: 'application/json'
         ))
 
         then:
         response.contentType == 'application/json'
-        response.body.contains('"name":"n1"')
-        response.body.contains('"name":"n2"')
+        response.bodyAsString.contains('"name":"n1"')
+        response.bodyAsString.contains('"name":"n2"')
     }
 
     def "Retrieve the default response of a POST request to resource 04"() {
         when:
-        def response = makePostRequest(new RequestProperties(
-            uri: "${browser.baseUrl}/test/04/single",
+        def response = makeRequest(new RequestProperties(
+            uri: '/test/04/single',
+            method: 'POST',
             contentType: 'application/xml',
-            body: '<testPerson><name>james</name></testPerson>'
+            body: '<testPerson><name>james</name></testPerson>'.bytes
         ))
 
         then:
         response.status == 200
-        response.body == '{"age":1,"id":null,"name":"semaj","version":null}'
+        response.bodyAsString == '{"age":1,"id":null,"name":"semaj","version":null}'
         response.contentType == 'application/json'
     }
 
     def "Retrieve an HTML response from resource 05"() {
         when:
-        def response = makeGetRequest(new RequestProperties(
-            uri: "${browser.baseUrl}/test/05"
+        def response = makeRequest(new RequestProperties(
+            uri: '/test/05',
+            method: 'GET'
         ))
 
         then:
         response.status == 200
-        response.body == '<html><body>test05</body></html>'
+        response.bodyAsString == '<html><body>test05</body></html>'
         response.contentType == 'text/html'
     }
 
     def "Specify query params in the request path"() {
         when:
-        def response = makeGetRequest(new RequestProperties(
-            uri: "${browser.baseUrl}/test/queryParam?value=jim"
+        def response = makeRequest(new RequestProperties(
+            uri: '/test/queryParam?value=jim',
+            method: 'GET'
         ))
 
         then:
         response.status == 200
-        response.body == 'jim'
+        response.bodyAsString == 'jim'
     }
 }

@@ -1,5 +1,6 @@
 package org.grails.plugins.jaxrs
 
+import grails.core.GrailsApplication
 import grails.plugins.Plugin
 import org.grails.plugins.jaxrs.artefact.ProviderArtefactHandler
 import org.grails.plugins.jaxrs.artefact.ResourceArtefactHandler
@@ -8,11 +9,18 @@ import org.grails.plugins.jaxrs.core.JaxrsFilter
 import org.grails.plugins.jaxrs.core.JaxrsListener
 import org.grails.plugins.jaxrs.core.JaxrsUtil
 import org.grails.plugins.jaxrs.provider.*
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.boot.context.embedded.FilterRegistrationBean
 import org.springframework.boot.context.embedded.ServletListenerRegistrationBean
 import org.springframework.core.Ordered
 
 class JaxrsGrailsPlugin extends Plugin {
+    /**
+     * Logger.
+     */
+    Logger log = LoggerFactory.getLogger(JaxrsGrailsPlugin)
+
     /**
      * Version of the plugin.
      *
@@ -59,20 +67,24 @@ class JaxrsGrailsPlugin extends Plugin {
     /**
      * Plugin author.
      */
-    def author = "Martin Krasser"
+    def author = "Bud Byrd"
 
     /**
      * Author email address.
      */
-    def authorEmail = "krasserm@googlemail.com"
+    def authorEmail = "bud.byrd@gmail.com"
 
     /**
      * Plugin title.
+     *
+     * TODO: change this
      */
     def title = "JSR 311 plugin"
 
     /**
      * Description of the plugin.
+     *
+     * TODO: change this
      */
     def description = """
 A plugin that supports the development of RESTful web services based on the
@@ -96,23 +108,25 @@ Apache Wink are likely to be added in upcoming versions of the plugin.
     def developers = [
         [name: 'Davide Cavestro', email: 'davide.cavestro@gmail.com'],
         [name: 'Noam Y. Tenne', email: 'noam@10ne.org'],
-        [name: 'Bud Byrd', email: 'bud.byrd@gmail.com']
+        [name: 'Martin Krasser', email: 'krasserm@googlemail.com']
     ]
 
     /**
      * Documentation URL.
+     *
+     * TODO: change this
      */
-    def documentation = 'https://github.com/krasserm/grails-jaxrs/wiki'
+    def documentation = 'https://github.com/budjb/grails-jaxrs/wiki'
 
     /**
      * Issues URL.
      */
-    def issueManagement = [url: 'https://github.com/krasserm/grails-jaxrs/issues']
+    def issueManagement = [url: 'https://github.com/budjb/grails-jaxrs/issues']
 
     /**
      * Source control URL.
      */
-    def scm = [url: 'https://github.com/krasserm/grails-jaxrs']
+    def scm = [url: 'https://github.com/budjb/grails-jaxrs']
 
     /**
      * Adds the JaxrsContext and plugin- and application-specific JAX-RS
@@ -172,8 +186,12 @@ Apache Wink are likely to be added in upcoming versions of the plugin.
      * <code>jersey</code>.
      */
     void doWithApplicationContext() {
-        JaxrsUtil jaxrsUtil = JaxrsUtil.getInstance(applicationContext)
+        if (!isEnabled(grailsApplication)) {
+            log.info "Not starting JAX-RS servlet due to application configuration."
+            return
+        }
 
+        JaxrsUtil jaxrsUtil = JaxrsUtil.getInstance(applicationContext)
         jaxrsUtil.setupJaxrsContext()
         jaxrsUtil.jaxrsContext.init()
     }
@@ -212,9 +230,13 @@ Apache Wink are likely to be added in upcoming versions of the plugin.
             return
         }
 
-        // Update the jaxrs context and reinitialize it
-        JaxrsUtil.getInstance().setupJaxrsContext()
-        JaxrsUtil.getInstance().jaxrsContext.restart();
+        if (!isEnabled(grailsApplication)) {
+            log.info "Not restarting JAX-RS servlet due to application configuration."
+        }
+        else {
+            JaxrsUtil.getInstance().setupJaxrsContext()
+            JaxrsUtil.getInstance().jaxrsContext.restart()
+        }
     }
 
     /**
@@ -224,11 +246,25 @@ Apache Wink are likely to be added in upcoming versions of the plugin.
      * @param application
      * @return
      */
-    private String getResourceScope(application) {
+    private String getResourceScope(GrailsApplication application) {
         def scope = application.config.org.grails.jaxrs.resource.scope
         if (!scope) {
             scope = 'prototype'
         }
         return scope
+    }
+
+    /**
+     * Returns whether the plugin is enabled.
+     *
+     * @param application
+     * @return
+     */
+    private boolean isEnabled(GrailsApplication application) {
+        def enabled = application.config.org.grails.jaxrs.enabled
+        if (!enabled) {
+            return false
+        }
+        return true
     }
 }

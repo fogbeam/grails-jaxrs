@@ -16,6 +16,8 @@
 package org.grails.plugins.jaxrs.core
 
 import org.grails.plugins.jaxrs.servlet.ServletFactory
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.InitializingBean
 
 import javax.servlet.Servlet
@@ -38,6 +40,11 @@ class JaxrsContext implements InitializingBean {
      * Name of the JAX-RS servlet.
      */
     static final String SERVLET_NAME = "org.grails.jaxrs.servlet.name"
+
+    /**
+     * Logger.
+     */
+    Logger log = LoggerFactory.getLogger(JaxrsContext)
 
     /**
      * Instance of the servlet handling JAX-RS requests.

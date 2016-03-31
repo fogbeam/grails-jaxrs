@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 the original author or authors.
+ * Copyright 2009-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.jaxrs
+package org.grails.plugins.jaxrs.resources
 
 import javax.ws.rs.GET
 import javax.ws.rs.Path
 import javax.ws.rs.Produces
-import javax.ws.rs.QueryParam
 
 /**
  * @author Martin Krasser
  */
-@Path('/test/queryParam')
-class TestQueryParamResource {
+@Path('/test/05')
+class Test05Resource {
     @GET
-    @Produces('text/plain')
-    String test(@QueryParam('value') String value) {
-        value
+    @Produces('text/html')
+    String test() {
+        '<html><body>test05</body></html>'
     }
 }

@@ -70,6 +70,7 @@ dependencies {
     compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.4.5'
 
     testCompile "com.sun.jersey:jersey-client:1.19"
+    testCompile "com.sun.jersey.contribs:jersey-spring:1.19"
 }
 
 

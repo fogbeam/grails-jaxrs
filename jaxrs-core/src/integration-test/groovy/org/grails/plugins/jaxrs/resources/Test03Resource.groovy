@@ -13,11 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.jaxrs.test
+package org.grails.plugins.jaxrs.resources
 
+import grails.converters.JSON
+import org.grails.plugins.jaxrs.support.TestPerson
+
+import javax.ws.rs.Consumes
+import javax.ws.rs.POST
+import javax.ws.rs.Path
+import javax.ws.rs.Produces
 /**
  * @author Martin Krasser
  */
-class CustomRequestEntity {
-    String content
+@Path('/test/03')
+class Test03Resource {
+
+    @POST
+    @Consumes('application/json')
+    @Produces('application/json')
+    JSON testPerson(Map params) {
+        def person = new TestPerson(params)
+        person.name = person.name.reverse()
+        person.age = person.age + 1
+        person as JSON
+    }
 }

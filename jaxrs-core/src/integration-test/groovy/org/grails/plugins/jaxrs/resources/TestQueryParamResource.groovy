@@ -13,20 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.jaxrs
+package org.grails.plugins.jaxrs.resources
 
 import javax.ws.rs.GET
 import javax.ws.rs.Path
 import javax.ws.rs.Produces
+import javax.ws.rs.QueryParam
 
 /**
  * @author Martin Krasser
  */
-@Path('/test/01')
-class Test01Resource {
+@Path('/test/queryParam')
+class TestQueryParamResource {
     @GET
     @Produces('text/plain')
-    String test() {
-        'test01'
+    String test(@QueryParam('value') String value) {
+        value
     }
 }

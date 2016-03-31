@@ -18,6 +18,13 @@ spring:
             check-template-location: false
 
 ---
+org:
+    grails:
+        plugins:
+            jaxrs:
+                enabled: false
+
+---
 grails:
     mime:
         disable:

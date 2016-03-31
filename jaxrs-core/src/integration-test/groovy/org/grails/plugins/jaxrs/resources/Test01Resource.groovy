@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2011 the original author or authors.
+ * Copyright 2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.jaxrs
+package org.grails.plugins.jaxrs.resources
 
-import grails.test.mixin.integration.Integration
+import javax.ws.rs.GET
+import javax.ws.rs.Path
+import javax.ws.rs.Produces
 
 /**
- * @author Noam Y. Tenne
+ * @author Martin Krasser
  */
-@Integration
-class RestletControllerIntegrationSpec extends JaxrsControllerIntegrationSpec {
-    // TODO: actually use restlet (meh)
+@Path('/test/01')
+class Test01Resource {
+    @GET
+    @Produces('text/plain')
+    String test() {
+        'test01'
+    }
 }

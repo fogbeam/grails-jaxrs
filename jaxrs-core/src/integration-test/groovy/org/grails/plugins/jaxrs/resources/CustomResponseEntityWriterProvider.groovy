@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.jaxrs
+package org.grails.plugins.jaxrs.resources
 
 import org.grails.plugins.jaxrs.provider.MessageBodyWriterSupport
-import org.grails.plugins.jaxrs.test.CustomResponseEntity
+import org.grails.plugins.jaxrs.support.CustomResponseEntity
 
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MultivaluedMap
