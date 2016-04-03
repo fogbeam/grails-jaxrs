@@ -261,8 +261,7 @@ Apache Wink are likely to be added in upcoming versions of the plugin.
      * @return
      */
     private boolean isEnabled(GrailsApplication application) {
-        def enabled = application.config.org.grails.jaxrs.enabled
-        if (!enabled) {
+        if (application.config.org.grails.jaxrs.enabled == false) {
             return false
         }
         return true
