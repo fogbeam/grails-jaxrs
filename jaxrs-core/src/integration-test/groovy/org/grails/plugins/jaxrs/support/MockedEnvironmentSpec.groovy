@@ -1,9 +1,5 @@
 package org.grails.plugins.jaxrs.support
 
-import com.sun.jersey.api.core.DefaultResourceConfig
-import com.sun.jersey.api.core.ResourceConfig
-import com.sun.jersey.spi.container.servlet.WebConfig
-import com.sun.jersey.spi.spring.container.servlet.SpringServlet
 import grails.test.mixin.integration.Integration
 import groovy.json.JsonSlurper
 import groovy.util.slurpersupport.GPathResult
@@ -11,12 +7,7 @@ import org.apache.commons.lang.StringUtils
 import org.grails.plugins.jaxrs.JaxrsController
 import org.grails.plugins.jaxrs.core.JaxrsApplicationConfig
 import org.grails.plugins.jaxrs.core.JaxrsContext
-import org.grails.plugins.jaxrs.core.JaxrsServletConfig
 import org.grails.plugins.jaxrs.core.JaxrsUtil
-import org.grails.plugins.jaxrs.provider.JSONReader
-import org.grails.plugins.jaxrs.provider.JSONWriter
-import org.grails.plugins.jaxrs.provider.XMLReader
-import org.grails.plugins.jaxrs.provider.XMLWriter
 import org.grails.plugins.jaxrs.servlet.ServletFactory
 import org.grails.web.servlet.mvc.GrailsWebRequest
 import org.grails.web.util.GrailsApplicationAttributes
@@ -29,9 +20,7 @@ import org.springframework.web.context.WebApplicationContext
 import org.springframework.web.context.request.RequestContextHolder
 import spock.lang.Specification
 
-import javax.servlet.Servlet
 import javax.servlet.ServletContext
-import javax.servlet.ServletException
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import javax.ws.rs.core.HttpHeaders
@@ -61,6 +50,7 @@ abstract class MockedEnvironmentSpec extends Specification {
     /**
      * Servlet factory.
      */
+    @Autowired
     ServletFactory servletFactory
 
     @Autowired
@@ -72,24 +62,6 @@ abstract class MockedEnvironmentSpec extends Specification {
     void setup() {
         JaxrsApplicationConfig application = new JaxrsApplicationConfig()
         application.classes.addAll(getResources())
-
-        servletFactory = new ServletFactory() {
-            @Override
-            Servlet createServlet(JaxrsApplicationConfig applicationConfig, JaxrsServletConfig servletConfig) {
-                return new SpringServlet() {
-                    @Override
-                    protected ResourceConfig getDefaultResourceConfig(Map<String, Object> props,
-                                                                      WebConfig webConfig) throws ServletException {
-                        return new DefaultResourceConfig(applicationConfig.classes)
-                    }
-                }
-            }
-
-            @Override
-            String getRuntimeDelegateClassName() {
-                return "com.sun.jersey.server.impl.provider.RuntimeDelegateImpl"
-            }
-        }
 
         servletContext = new MockServletContext()
         servletContext.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, applicationContext)

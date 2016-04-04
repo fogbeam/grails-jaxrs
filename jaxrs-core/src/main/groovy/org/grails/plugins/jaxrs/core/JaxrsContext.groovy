@@ -103,17 +103,6 @@ class JaxrsContext implements InitializingBean {
     }
 
     /**
-     * Stores and initializes a JAX-RS servlet.
-     *
-     * @param servlet
-     * @throws ServletException
-     */
-    void initServlet(Servlet servlet) throws ServletException {
-        jaxrsServlet = servlet
-        jaxrsServlet.init(createServletConfig())
-    }
-
-    /**
      * Create the servlet configuration.
      *
      * @return

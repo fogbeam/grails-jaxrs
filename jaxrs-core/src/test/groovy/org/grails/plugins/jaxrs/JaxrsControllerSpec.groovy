@@ -16,12 +16,15 @@
 package org.grails.plugins.jaxrs
 
 import grails.test.mixin.TestFor
+import org.grails.plugins.jaxrs.core.JaxrsApplicationConfig
+import org.grails.plugins.jaxrs.core.JaxrsServletConfig
 import org.grails.plugins.jaxrs.core.JaxrsUtil
 import org.grails.plugins.jaxrs.core.JaxrsContext
-
+import org.grails.plugins.jaxrs.servlet.ServletFactory
 import org.springframework.mock.web.MockHttpServletResponse
 import spock.lang.Specification
 
+import javax.servlet.Servlet
 import javax.servlet.ServletConfig
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
@@ -38,25 +41,37 @@ class JaxrsControllerSpec extends Specification {
     HttpServlet httpServlet
 
     def setup() {
-        httpServlet = new HttpServlet() {
-            void service(HttpServletRequest request, HttpServletResponse response) {
-                MockHttpServletResponse mockResponse = (MockHttpServletResponse) response
-                mockResponse.writer.println(request.requestURI)
-                mockResponse.writer.flush()
+        ServletFactory servletFactory = new ServletFactory() {
+            @Override
+            Servlet createServlet(JaxrsApplicationConfig applicationConfig, JaxrsServletConfig servletConfig) {
+                return new HttpServlet() {
+                    void service(HttpServletRequest request, HttpServletResponse response) {
+                        MockHttpServletResponse mockResponse = (MockHttpServletResponse) response
+                        mockResponse.writer.println(request.requestURI)
+                        mockResponse.writer.flush()
+                    }
+
+                    void init(ServletConfig config) {
+                        // nothing to do
+                    }
+                }
             }
 
-            void init(ServletConfig config) {
-                // nothing to do
+            @Override
+            String getRuntimeDelegateClassName() {
+                return 'foo.bar'
             }
         }
 
         jaxrsContext = new JaxrsContext()
-        jaxrsContext.initServlet(httpServlet)
+        jaxrsContext.jaxrsServletFactory = servletFactory
         controller.jaxrsContext = jaxrsContext
 
         jaxrsUtil = new JaxrsUtil()
         JaxrsUtil._instance = jaxrsUtil
         controller.jaxrsUtil = jaxrsUtil
+
+        jaxrsContext.init()
     }
 
     def cleanup() {

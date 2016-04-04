@@ -1,6 +1,9 @@
 package org.grails.plugins.jaxrs.jersey
 
+import com.sun.jersey.api.core.DefaultResourceConfig
 import com.sun.jersey.api.core.PackagesResourceConfig
+import com.sun.jersey.api.core.ResourceConfig
+import com.sun.jersey.spi.container.servlet.WebConfig
 import com.sun.jersey.spi.spring.container.servlet.SpringServlet
 import grails.core.GrailsApplication
 import org.grails.plugins.jaxrs.core.JaxrsApplicationConfig
@@ -8,6 +11,7 @@ import org.grails.plugins.jaxrs.core.JaxrsServletConfig
 import org.grails.plugins.jaxrs.servlet.ServletFactory
 
 import javax.servlet.Servlet
+import javax.servlet.ServletException
 
 /**
  * A servlet factory that handles the Jersey 1.x JAX-RS implementation.
@@ -31,7 +35,12 @@ class JerseyServletFactory implements ServletFactory {
     Servlet createServlet(JaxrsApplicationConfig applicationConfig, JaxrsServletConfig servletConfig) {
         setupServletConfig(servletConfig)
 
-        return new SpringServlet()
+        return new SpringServlet() {
+            @Override
+            protected ResourceConfig getDefaultResourceConfig(Map<String, Object> props, WebConfig webConfig) throws ServletException {
+                return new DefaultResourceConfig(applicationConfig.getClasses())
+            }
+        }
     }
 
     /**
