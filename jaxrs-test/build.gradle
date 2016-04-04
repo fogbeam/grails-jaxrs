@@ -11,17 +11,11 @@ buildscript {
     }
 }
 
-plugins {
-    id "io.spring.dependency-management" version "0.5.4.RELEASE"
-    id "com.jfrog.bintray" version "1.2"
-}
-
-apply plugin:"eclipse"
-apply plugin:"idea"
-apply plugin:"org.grails.grails-plugin"
-apply plugin:"org.grails.grails-plugin-publish"
-apply plugin:"org.grails.grails-gsp"
-apply plugin: "org.grails.grails-doc"
+apply plugin: "eclipse"
+apply plugin: "idea"
+apply plugin: "org.grails.grails-plugin"
+apply plugin: "org.grails.grails-plugin-publish"
+apply plugin: "org.grails.grails-gsp"
 
 ext {
     grailsVersion = project.grailsVersion
@@ -30,9 +24,7 @@ ext {
 
 repositories {
     mavenLocal()
-    mavenCentral()
     maven { url "https://repo.grails.org/grails/core" }
-    maven { url 'http://maven.restlet.org' }
 }
 
 dependencyManagement {
@@ -56,22 +48,14 @@ dependencies {
     profile "org.grails.profiles:web-plugin:3.1.4"
     provided "org.grails:grails-plugin-services"
     provided "org.grails:grails-plugin-domain-class"
-    testCompile "org.grails:grails-plugin-testing"
-    testCompile "org.grails.plugins:geb"
-    testRuntime "org.seleniumhq.selenium:selenium-htmlunit-driver:2.47.1"
-    testRuntime "net.sourceforge.htmlunit:htmlunit:2.18"
 
-    compile('javax.ws.rs:jsr311-api:1.1.1') {
-        exclude module: 'junit'
-    }
+    compile "org.grails:grails-plugin-testing"
+    compile "org.grails.plugins:geb"
 
-    testCompile project(':jaxrs-test')
-    testCompile project(':jaxrs-jersey1')
-}
+    runtime "org.seleniumhq.selenium:selenium-htmlunit-driver:2.47.1"
+    runtime "net.sourceforge.htmlunit:htmlunit:2.18"
 
-
-task wrapper(type: Wrapper) {
-    gradleVersion = gradleWrapperVersion
+    compile project(':jaxrs-core')
 }
 
 grailsPublish {
@@ -84,7 +68,7 @@ grailsPublish {
     }
     title = "My Plugin"
     desc = "Full plugin description"
-    developers = [johndoe:"John Doe"]
+    developers = [johndoe: "John Doe"]
     portalUser = ""
     portalPassword = ""
 }

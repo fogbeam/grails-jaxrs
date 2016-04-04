@@ -39,7 +39,7 @@ class JaxrsFilter extends OncePerRequestFilter {
         HttpServletRequest request, HttpServletResponse response, FilterChain chain)
         throws ServletException, IOException {
 
-        JaxrsUtil.getInstance().setRequestUriAttribute(request, request.getRequestURI())
+        request.setAttribute(JaxrsUtil.REQUEST_URI_ATTRIBUTE_NAME, request.getRequestURI())
         chain.doFilter(request, response)
     }
 }

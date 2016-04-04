@@ -169,27 +169,4 @@ class JaxrsUtil {
 
         return config.flatten()
     }
-
-    /**
-     * Obtains the request URI that has been previously been stored via
-     * {@link #setRequestUriAttribute(javax.servlet.ServletRequest, String)} from a
-     * <code>request</code>.
-     *
-     * @param request request where to obtain the URI from.
-     * @return request URI.
-     */
-    String getRequestUriAttribute(ServletRequest request) {
-        return (String) request.getAttribute(REQUEST_URI_ATTRIBUTE_NAME)
-    }
-
-    /**
-     * Stores a request <code>uri</code> as <code>request</code> attribute. The
-     * request attribute name is {@link #REQUEST_URI_ATTRIBUTE_NAME}.
-     *
-     * @param request request where to store the URI.
-     * @param uri request URI.
-     */
-    void setRequestUriAttribute(ServletRequest request, String uri) {
-        request.setAttribute(REQUEST_URI_ATTRIBUTE_NAME, uri)
-    }
 }

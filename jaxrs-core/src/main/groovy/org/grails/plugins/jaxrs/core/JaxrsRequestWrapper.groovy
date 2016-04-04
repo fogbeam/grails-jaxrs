@@ -45,7 +45,7 @@ class JaxrsRequestWrapper extends HttpServletRequestWrapper {
      */
     @Override
     String getRequestURI() {
-        return JaxrsUtil.getInstance().getRequestUriAttribute(getRequest())
+        return (String) getAttribute(JaxrsUtil.REQUEST_URI_ATTRIBUTE_NAME)
     }
 
     /**

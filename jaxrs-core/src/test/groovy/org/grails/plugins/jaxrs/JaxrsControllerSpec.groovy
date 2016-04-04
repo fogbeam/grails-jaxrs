@@ -81,7 +81,7 @@ class JaxrsControllerSpec extends Specification {
     def 'Ensure requests get handed off correctly'() {
         setup:
         controller.request.method = 'GET'
-        jaxrsUtil.setRequestUriAttribute(controller.request, '/test')
+        controller.request.setAttribute(JaxrsUtil.REQUEST_URI_ATTRIBUTE_NAME, '/test')
 
         when:
         controller.handle()

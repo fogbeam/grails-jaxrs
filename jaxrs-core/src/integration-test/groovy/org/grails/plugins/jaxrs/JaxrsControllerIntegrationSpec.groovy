@@ -17,15 +17,16 @@ package org.grails.plugins.jaxrs
 
 import grails.test.mixin.integration.Integration
 import org.grails.plugins.jaxrs.resources.*
-import org.grails.plugins.jaxrs.support.MockedEnvironmentSpec
-import org.springframework.beans.factory.annotation.Autowired
+import org.grails.plugins.jaxrs.test.JaxrsIntegrationSpec
+import org.grails.plugins.jaxrs.test.JaxrsRequestProperties
 import spock.lang.Unroll
 
 /**
  * @author Noam Y. Tenne
+ * @author Bud Byrd
  */
 @Integration
-class JaxrsControllerIntegrationSpec extends MockedEnvironmentSpec {
+class JaxrsControllerIntegrationSpec extends JaxrsIntegrationSpec {
     /**
      * Grails application bean.
      */
@@ -53,7 +54,7 @@ class JaxrsControllerIntegrationSpec extends MockedEnvironmentSpec {
 
     def "Execute a GET request"() {
         when:
-        def response = makeRequest(new RequestProperties(
+        def response = makeRequest(new JaxrsRequestProperties(
             uri: '/test/01',
             method: 'GET'
         ))
@@ -66,7 +67,7 @@ class JaxrsControllerIntegrationSpec extends MockedEnvironmentSpec {
 
     def "Execute a POST request on resource 02"() {
         when:
-        def response = makeRequest(new RequestProperties(
+        def response = makeRequest(new JaxrsRequestProperties(
             uri: '/test/02',
             method: 'POST',
             contentType: 'text/plain',
@@ -81,7 +82,7 @@ class JaxrsControllerIntegrationSpec extends MockedEnvironmentSpec {
 
     def "Execute a POST request on resource 03"() {
         when:
-        def response = makeRequest(new RequestProperties(
+        def response = makeRequest(new JaxrsRequestProperties(
             uri: '/test/03',
             method: 'POST',
             contentType: 'application/json',
@@ -99,7 +100,7 @@ class JaxrsControllerIntegrationSpec extends MockedEnvironmentSpec {
 
     def "Execute a POST request on resource 06"() {
         when:
-        def response = makeRequest(new RequestProperties(
+        def response = makeRequest(new JaxrsRequestProperties(
             uri: '/test/06',
             method: 'POST',
             contentType: 'application/json',
@@ -118,7 +119,7 @@ class JaxrsControllerIntegrationSpec extends MockedEnvironmentSpec {
 
     def "Initiate a single round-trip on resource 04 for content type application/xml"() {
         when:
-        def response = makeRequest(new RequestProperties(
+        def response = makeRequest(new JaxrsRequestProperties(
             uri: '/test/04/single',
             method: 'POST',
             contentType: 'application/xml',
@@ -136,7 +137,7 @@ class JaxrsControllerIntegrationSpec extends MockedEnvironmentSpec {
 
     def "Initiate a single round-trip on resource 04 for content type application/json"() {
         when:
-        def response = makeRequest(new RequestProperties(
+        def response = makeRequest(new JaxrsRequestProperties(
             uri: '/test/04/single',
             method: 'POST',
             contentType: 'application/json',
@@ -159,7 +160,7 @@ class JaxrsControllerIntegrationSpec extends MockedEnvironmentSpec {
         grailsApplication.config.org.grails.jaxrs.dowriter.require.generic.collections = genericOnly
 
         when:
-        def response = makeRequest(new RequestProperties(
+        def response = makeRequest(new JaxrsRequestProperties(
             uri: '/test/04/multi/generic',
             method: 'GET',
             accept: 'application/xml'
@@ -179,7 +180,7 @@ class JaxrsControllerIntegrationSpec extends MockedEnvironmentSpec {
     @Unroll
     def "Retrieve a raw and object XML collection from resource 04 with mode #mode"() {
         when:
-        def response = makeRequest(new RequestProperties(
+        def response = makeRequest(new JaxrsRequestProperties(
             uri: "/test/04/multi/$mode",
             method: 'GET',
             accept: 'application/xml'
@@ -202,7 +203,7 @@ class JaxrsControllerIntegrationSpec extends MockedEnvironmentSpec {
         grailsApplication.config.org.grails.jaxrs.dowriter.require.generic.collections = true
 
         when:
-        def response = makeRequest(new RequestProperties(
+        def response = makeRequest(new JaxrsRequestProperties(
             uri: "/test/04/multi/$mode",
             method: 'GET',
             accept: 'application/xml'
@@ -220,7 +221,7 @@ class JaxrsControllerIntegrationSpec extends MockedEnvironmentSpec {
 
     def "Retrieve a generic JSON collection from resource 04"() {
         when:
-        def response = makeRequest(new RequestProperties(
+        def response = makeRequest(new JaxrsRequestProperties(
             uri: '/test/04/multi/generic',
             method: 'GET',
             accept: 'application/json'
@@ -238,7 +239,7 @@ class JaxrsControllerIntegrationSpec extends MockedEnvironmentSpec {
         grailsApplication.config.org.grails.jaxrs.getProperty("do${facilityToDisabled}").disable = true
 
         when:
-        def response = makeRequest(new RequestProperties(
+        def response = makeRequest(new JaxrsRequestProperties(
             uri: '/test/04/single',
             method: 'POST',
             contentType: 'application/xml',
@@ -260,7 +261,7 @@ class JaxrsControllerIntegrationSpec extends MockedEnvironmentSpec {
 
     def "Retrieve the default response of a POST request to resource 04"() {
         when:
-        def response = makeRequest(new RequestProperties(
+        def response = makeRequest(new JaxrsRequestProperties(
             uri: '/test/04/single',
             method: 'POST',
             contentType: 'application/xml',
@@ -275,7 +276,7 @@ class JaxrsControllerIntegrationSpec extends MockedEnvironmentSpec {
 
     def "Retrieve an HTML response from resource 05"() {
         when:
-        def response = makeRequest(new RequestProperties(
+        def response = makeRequest(new JaxrsRequestProperties(
             uri: '/test/05',
             method: 'GET'
         ))
@@ -288,7 +289,7 @@ class JaxrsControllerIntegrationSpec extends MockedEnvironmentSpec {
 
     def "Specify query params in the request path"() {
         when:
-        def response = makeRequest(new RequestProperties(
+        def response = makeRequest(new JaxrsRequestProperties(
             uri: '/test/queryParam?value=jim',
             method: 'GET'
         ))
