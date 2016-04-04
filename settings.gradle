@@ -1,1 +1,1 @@
-include 'jaxrs-core', 'jaxrs-jersey1', 'jaxrs-jersey2', 'jaxrs-restlet'
+include 'jaxrs-core', 'jaxrs-jersey1', 'jaxrs-jersey2', 'jaxrs-restlet', 'jaxrs-example'

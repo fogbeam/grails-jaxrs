@@ -1,0 +1,7 @@
+The @jaxrs@ project is a set of Grails plugins that supports the development of RESTful web services based on the Java
+API for RESTful Web Services (JSR 311: JAX-RS).
+
+It is targeted at developers who want to structure the web service layer of an application in a JSR 311 compatible way
+but still want to continue to use Grails' powerful features such as GORM, automated XML and JSON marshalling, Grails
+services, Grails filters and so on. This plugin is an alternative to Grails' built-in mechanism for implementing RESTful
+web services.

@@ -134,7 +134,6 @@ class JaxrsControllerIntegrationSpec extends MockedEnvironmentSpec {
         data['name'].text() == 'semaj'
     }
 
-    @Unroll
     def "Initiate a single round-trip on resource 04 for content type application/json"() {
         when:
         def response = makeRequest(new RequestProperties(
@@ -198,6 +197,27 @@ class JaxrsControllerIntegrationSpec extends MockedEnvironmentSpec {
         mode << ['raw', 'object']
     }
 
+    def "Retrieve a raw and object XML collection from resource 04 with generic-only turned on"() {
+        setup:
+        grailsApplication.config.org.grails.jaxrs.dowriter.require.generic.collections = true
+
+        when:
+        def response = makeRequest(new RequestProperties(
+            uri: "/test/04/multi/$mode",
+            method: 'GET',
+            accept: 'application/xml'
+        ))
+
+        then:
+        response.status == 500
+
+        cleanup:
+        grailsApplication.config.org.grails.jaxrs.dowriter.require.generic.collections = false
+
+        where:
+        mode << ['raw', 'object']
+    }
+
     def "Retrieve a generic JSON collection from resource 04"() {
         when:
         def response = makeRequest(new RequestProperties(
@@ -210,6 +230,32 @@ class JaxrsControllerIntegrationSpec extends MockedEnvironmentSpec {
         response.contentType == 'application/json'
         response.bodyAsString.contains('"name":"n1"')
         response.bodyAsString.contains('"name":"n2"')
+    }
+
+    @Unroll
+    def "Post content to resource 04 while the IO facilities are disabled to test the #facilityToDisabled"() {
+        setup:
+        grailsApplication.config.org.grails.jaxrs.getProperty("do${facilityToDisabled}").disable = true
+
+        when:
+        def response = makeRequest(new RequestProperties(
+            uri: '/test/04/single',
+            method: 'POST',
+            contentType: 'application/xml',
+            accept: 'application/xml',
+            body: '<testPerson><name>james</name></testPerson>'.bytes
+        ))
+
+        then:
+        response.status == expectedStatus
+
+        cleanup:
+        grailsApplication.config.org.grails.jaxrs.getProperty("do${facilityToDisabled}").disable = false
+
+        where:
+        facilityToDisabled | expectedStatus
+        'reader'           | 415
+        'writer'           | 500
     }
 
     def "Retrieve the default response of a POST request to resource 04"() {
