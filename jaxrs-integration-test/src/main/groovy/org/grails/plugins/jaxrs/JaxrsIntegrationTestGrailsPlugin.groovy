@@ -2,7 +2,7 @@ package org.grails.plugins.jaxrs
 
 import grails.plugins.Plugin
 
-class JaxrsTestGrailsPlugin extends Plugin {
+class JaxrsIntegrationTestGrailsPlugin extends Plugin {
     /**
      * Version of Grails the plugin is meant for.
      */

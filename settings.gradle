@@ -1,1 +1,6 @@
-include 'jaxrs-core', 'jaxrs-jersey1', 'jaxrs-jersey2', 'jaxrs-restlet', 'jaxrs-example', 'jaxrs-test'
+include 'jaxrs-core'
+include 'jaxrs-jersey1'
+include 'jaxrs-jersey2'
+include 'jaxrs-restlet'
+include 'jaxrs-example'
+include 'jaxrs-integration-test'

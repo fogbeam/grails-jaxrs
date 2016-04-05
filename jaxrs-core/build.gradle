@@ -65,7 +65,7 @@ dependencies {
         exclude module: 'junit'
     }
 
-    testCompile project(':jaxrs-test')
+    testCompile project(':jaxrs-integration-test')
     testCompile project(':jaxrs-jersey1')
 }
 
