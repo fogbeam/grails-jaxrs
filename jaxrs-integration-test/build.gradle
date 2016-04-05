@@ -59,16 +59,14 @@ dependencies {
 }
 
 grailsPublish {
-    // TODO: Provide values here
-    user = 'user'
-    key = 'key'
-    githubSlug = 'foo/bar'
+    githubSlug = publishGithubSlug
+    repo = publishRepo
     license {
-        name = 'Apache-2.0'
+        name = publishLicense
     }
-    title = "My Plugin"
-    desc = "Full plugin description"
-    developers = [johndoe: "John Doe"]
-    portalUser = ""
-    portalPassword = ""
+    title = "jaxrs-integration-test"
+    desc = '''The jaxrs project is a set of Grails plugins that supports the development of RESTful web services based
+on the Java API for RESTful Web Services. The jaxrs-integration-test plugin provides classes to help with integration
+testing.'''
+    developers = publishDevelopers
 }
