@@ -39,7 +39,7 @@ prior to 2.2.x.
 
 h3. Version 0.7
 * Enhancement: Added infrastructure to enable Spock integration testing
-* Fix: Cannot use grails-jaxrs 0.6 with servlet 2.5 (it needs servlet api 3.0).
+* Fix: Cannot use *jaxrs* 0.6 with servlet 2.5 (it needs servlet api 3.0).
 * Fix: Removed usages of the deprecated Grails ConfigurationHolder.
 
 h3. Version 0.6

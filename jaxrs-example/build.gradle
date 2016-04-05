@@ -41,7 +41,6 @@ dependencyManagement {
 }
 
 dependencies {
-    compile project(':jaxrs-jersey1')
     compile "org.springframework.boot:spring-boot-starter-logging"
     compile "org.springframework.boot:spring-boot-autoconfigure"
     compile "org.grails:grails-core"
@@ -61,6 +60,9 @@ dependencies {
     testCompile "org.grails.plugins:geb"
     testRuntime "org.seleniumhq.selenium:selenium-htmlunit-driver:2.47.1"
     testRuntime "net.sourceforge.htmlunit:htmlunit:2.18"
+
+    compile project(':jaxrs-jersey1')
+    testCompile project(':jaxrs-integration-test')
 }
 
 task wrapper(type: Wrapper) {

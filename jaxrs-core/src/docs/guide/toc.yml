@@ -22,6 +22,7 @@ advanced:
     filters: Applying Filters
     injection: Service Injection
     google: Google App Engine
+acknowledgements: Acknowledgements
 changelog:
     title: Changelog
     v3changelog: Grails 3.x

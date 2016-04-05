@@ -1,4 +1,4 @@
-JSON providers are superseded by domain object providers since grails-jaxrs version 0.3.
+JSON providers are superseded by domain object providers since *jaxrs* version 0.3.
 
 * @org.grails.jaxrs.provider.JSONReader@ converts a JSON representation of a domain object into a @java.util.Map@. This map can be used for constructing domain objects.
 * @org.grails.jaxrs.provider.JSONWriter@ converts an @grails.converters.JSON@ object into a JSON representation.

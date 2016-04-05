@@ -1,5 +1,5 @@
 Applications can implement their own entity providers by placing them into the @grails-app/providers@ directory. In
-order to be auto-detected by grails-jaxrs they:
+order to be auto-detected by *jaxrs* they:
 
 * must be annotated with @javax.ws.rs.ext.Provider@.
 * must have a file name matching @*Reader.groovy@ if the corresponding class implements @javax.ws.rs.ext.MessageBodyReader@.
