@@ -28,11 +28,6 @@ import spock.lang.Unroll
 @Integration
 class JaxrsControllerIntegrationSpec extends JaxrsIntegrationSpec {
     /**
-     * Grails application bean.
-     */
-    def grailsApplication
-
-    /**
      * Return the list of resources to build the JAX-RS servlet with.
      *
      * @return
@@ -93,7 +88,7 @@ class JaxrsControllerIntegrationSpec extends JaxrsIntegrationSpec {
         response.status == 200
         response.contentType == 'application/json'
 
-        Map data = parseJson(response.body) as Map
+        Map data = response.bodyAsJson
         data.age == 39
         data.name == "ekim"
     }
@@ -112,7 +107,7 @@ class JaxrsControllerIntegrationSpec extends JaxrsIntegrationSpec {
         response.status == 200
         response.contentType == 'application/xml'
 
-        def data = parseXml(response.bodyAsString)
+        def data = response.bodyAsXml
         data['age'].text() == '39'
         data['name'].text() == 'ekim'
     }
@@ -131,7 +126,7 @@ class JaxrsControllerIntegrationSpec extends JaxrsIntegrationSpec {
         response.status == 200
         response.contentType == 'application/xml'
 
-        def data = parseXml(response.bodyAsString)
+        def data = response.bodyAsXml
         data['name'].text() == 'semaj'
     }
 
@@ -149,7 +144,7 @@ class JaxrsControllerIntegrationSpec extends JaxrsIntegrationSpec {
         response.status == 200
         response.contentType == 'application/json'
 
-        def data = parseJson(response.body)
+        def data = response.bodyAsJson
         data.name == 'semaj'
         data.age == 26
     }
