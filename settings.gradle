@@ -1,6 +1,5 @@
 include 'jaxrs-core'
 include 'jaxrs-jersey1'
-include 'jaxrs-jersey2'
 include 'jaxrs-restlet'
 include 'jaxrs-example'
 include 'jaxrs-integration-test'

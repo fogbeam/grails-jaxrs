@@ -16,7 +16,6 @@ The table below details the various plugins that are available and what they do.
 Name | Description
 jaxrs-core | Contains the core classes necessary to run the *jaxrs* plugin. This plugin should *not* be included directly in applications.
 jaxrs-jersey1 | Implements the *jersey server 1.x* JAX-RS library.
-jaxrs-jersey2 | Implements the *jersey server 2.x* JAX-RS library.
 jaxrs-restlet | Implements the *restlet* JAX-RS library.
 jaxrs-integration-test | Provides a mocked environment superclass useful for integration tests that target resources.
 {table}

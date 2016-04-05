@@ -6,7 +6,6 @@ Major changes include:
 * Plugin has been broken up into several plugins.
   ** *jaxrs-core* contains the base logic for the plugin but will not work standalone.
   ** *jaxrs-jersey1* uses the Jersey 1.9 implementation.
-  ** *jaxrs-jersey2* uses the Jersey 2.22.2 implementation.
   ** *jaxrs-restlet* uses the Restlet 2.1.4 implementation.
   ** *jaxrs-integration-test* provides base classes to test resources in integration tests.
 * Most source files have been changed from @\*.java@ to @\*.groovy@ files.
