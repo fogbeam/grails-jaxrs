@@ -1,5 +1,6 @@
 package org.grails.plugins.jaxrs.test
 
+import grails.core.GrailsApplication
 import org.grails.plugins.jaxrs.JaxrsController
 import org.grails.plugins.jaxrs.core.JaxrsApplicationConfig
 import org.grails.plugins.jaxrs.core.JaxrsContext
@@ -54,23 +55,26 @@ abstract class JaxrsIntegrationSpec extends Specification {
     @Autowired
     ApplicationContext applicationContext
 
+    @Autowired
+    GrailsApplication grailsApplication
+
     /**
      * Set up the environment for tests.
      */
     void setup() {
-        JaxrsApplicationConfig application = new JaxrsApplicationConfig()
-        application.classes.addAll(getResources())
-
         servletContext = new MockServletContext()
         servletContext.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, applicationContext)
 
         jaxrsContext = new JaxrsContext()
         jaxrsContext.servletContext = servletContext
         jaxrsContext.jaxrsServletFactory = servletFactory
-        jaxrsContext.applicationConfig = application
 
         jaxrsUtil = new JaxrsUtil()
+        jaxrsUtil.grailsApplication = grailsApplication
         jaxrsUtil.jaxrsContext = jaxrsContext
+
+        jaxrsUtil.setupJaxrsContext()
+        jaxrsContext.applicationConfig.classes.addAll(getResources())
 
         jaxrsController = new JaxrsController()
         jaxrsController.jaxrsContext = jaxrsContext

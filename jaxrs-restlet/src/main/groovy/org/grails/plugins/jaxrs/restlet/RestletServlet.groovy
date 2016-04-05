@@ -53,7 +53,7 @@ class RestletServlet extends ServerServlet {
             getServletContext().removeAttribute(it)
         }
 
-        ServerServlet.destroy()
+        super.destroy()
     }
 
     /**
