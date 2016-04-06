@@ -13,19 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.jaxrs.provider;
+package org.grails.plugins.jaxrs.provider
 
-import grails.converters.JSON;
-import org.grails.web.converters.configuration.ConvertersConfigurationHolder;
+import grails.converters.JSON
+import org.grails.web.converters.configuration.ConvertersConfigurationHolder
 
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.ext.Provider;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import javax.ws.rs.Produces
+import javax.ws.rs.WebApplicationException
+import javax.ws.rs.core.MultivaluedMap
+import javax.ws.rs.ext.Provider
 
 /**
  * Provider for Grails' {@link JSON} converter class.
@@ -37,38 +33,30 @@ import java.io.Writer;
  * <pre>
  * &#064;Path('/notes')
  * &#064;Produces('text/x-json') // or 'application/json'
- * class NotesResource {
- *
+ * class NotesResource {*
  *      &#064;GET
- *      XML findNotes() {
- *          Note.findAll() as JSON
- *      }
- *
- * }
- * </pre>
+ *      XML findNotes() {*          Note.findAll() as JSON
+ *}*
+ *}* </pre>
  *
  * Alternatively, one could write
  *
  * <pre>
  * &#064;Path('/notes')
  * &#064;Produces('text/x-json') // or 'application/json'
- * class NotesResource {
- *
+ * class NotesResource {*
  *      &#064;GET
- *      Response findNotes() {
- *          Response.ok(Note.findAll() as JSON).build()
- *      }
- *
- * }
- * </pre>
+ *      Response findNotes() {*          Response.ok(Note.findAll() as JSON).build()
+ *}*
+ *}* </pre>
  *
  * @author Martin Krasser
  */
 @Provider
-@Produces({"text/x-json", "application/json"})
-public class JSONWriter extends MessageBodyWriterSupport<JSON> {
+@Produces(["text/x-json", "application/json"])
+class JSONWriter extends MessageBodyWriterSupport<JSON> {
 
-    public static final String DEFAULT_CHARSET = "UTF-8";
+    static final String DEFAULT_CHARSET = "UTF-8"
 
     /**
      * Renders the <code>json</code> object to the response's
@@ -85,13 +73,14 @@ public class JSONWriter extends MessageBodyWriterSupport<JSON> {
     @Override
     protected void writeTo(JSON json, MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream)
         throws IOException, WebApplicationException {
-        String charset = ConvertersConfigurationHolder.getConverterConfiguration(JSON.class).getEncoding();
-        Writer writer = null;
+        String charset = ConvertersConfigurationHolder.getConverterConfiguration(JSON.class).getEncoding()
+        Writer writer
         if (charset == null) {
-            writer = new OutputStreamWriter(entityStream, DEFAULT_CHARSET);
-        } else {
-            writer = new OutputStreamWriter(entityStream, charset);
+            writer = new OutputStreamWriter(entityStream, DEFAULT_CHARSET)
         }
-        json.render(writer);
+        else {
+            writer = new OutputStreamWriter(entityStream, charset)
+        }
+        json.render(writer)
     }
 }

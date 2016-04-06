@@ -21,10 +21,8 @@ package org.grails.plugins.jaxrs.provider;
  *
  * @author Martin Krasser
  */
-@SuppressWarnings("serial")
-public class IllegalTypeException extends RuntimeException {
-
-    public IllegalTypeException(String message) {
-        super(message);
+class IllegalTypeException extends RuntimeException {
+    IllegalTypeException(String message) {
+        super(message)
     }
 }

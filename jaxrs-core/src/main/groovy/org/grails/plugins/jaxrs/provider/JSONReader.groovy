@@ -13,25 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.jaxrs.provider;
+package org.grails.plugins.jaxrs.provider
 
-import grails.core.GrailsApplication;
-import grails.core.support.GrailsApplicationAware;
-import org.grails.plugins.jaxrs.provider.ConverterUtils;
+import grails.core.GrailsApplication
+import grails.core.support.GrailsApplicationAware
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.ext.Provider;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
-import java.util.Map;
+import javax.ws.rs.Consumes
+import javax.ws.rs.WebApplicationException
+import javax.ws.rs.core.MediaType
+import javax.ws.rs.core.MultivaluedMap
+import javax.ws.rs.ext.Provider
+import java.lang.annotation.Annotation
+import java.lang.reflect.Type
 
-import static org.grails.plugins.jaxrs.provider.ConverterUtils.getDefaultEncoding;
-import static org.grails.plugins.jaxrs.provider.ConverterUtils.jsonToMap;
+import static org.grails.plugins.jaxrs.provider.ConverterUtils.getDefaultEncoding
+import static org.grails.plugins.jaxrs.provider.ConverterUtils.jsonToMap
 
 /**
  * A message body reader that converts a JSON entity stream to a map than can be
@@ -44,49 +40,45 @@ import static org.grails.plugins.jaxrs.provider.ConverterUtils.jsonToMap;
  * <pre>
  * &#064;Path('/notes')
  * &#064;Produces('text/x-json')
- * class NotesResource {
- *
+ * class NotesResource {*
  *      &#064;POST
  *      &#064;Consumes('text/x-json')
- *      Response addNote(Map properties) {
- *          // create ne Note domain object
+ *      Response addNote(Map properties) {*          // create ne Note domain object
  *          def note = new Note(properties).save()
- *      }
- *
- * }
- *
+ *}*
+ *}*
  *
  * </pre>
  *
  * @author Martin Krasser
  */
 @Provider
-@Consumes({"text/x-json", "application/json"})
-public class JSONReader extends MessageBodyReaderSupport<Map> implements GrailsApplicationAware {
+@Consumes(["text/x-json", "application/json"])
+class JSONReader extends MessageBodyReaderSupport<Map> implements GrailsApplicationAware {
 
-    private GrailsApplication grailsApplication;
+    private GrailsApplication grailsApplication
 
-    public void setGrailsApplication(GrailsApplication grailsApplication) {
-        this.grailsApplication = grailsApplication;
+    void setGrailsApplication(GrailsApplication grailsApplication) {
+        this.grailsApplication = grailsApplication
     }
 
     @Override
-    public Map readFrom(Class<Map> type, Type genericType,
+    Map readFrom(Class<Map> type, Type genericType,
                         Annotation[] annotations, MediaType mediaType,
                         MultivaluedMap<String, String> httpHeaders, InputStream entityStream)
-            throws IOException, WebApplicationException {
+        throws IOException, WebApplicationException {
 
-        String encoding = ConverterUtils.getEncoding(httpHeaders, mediaType, getDefaultEncoding(grailsApplication));
+        String encoding = ConverterUtils.getEncoding(httpHeaders, mediaType, getDefaultEncoding(grailsApplication))
 
         // Convert JSON to map used for constructing domain objects
-        return jsonToMap(entityStream, encoding);
+        return jsonToMap(entityStream, encoding)
     }
 
     @Override
-    public Map readFrom(MultivaluedMap<String, String> httpHeaders,
+    Map readFrom(MultivaluedMap<String, String> httpHeaders,
                         InputStream entityStream) throws IOException,
-            WebApplicationException {
+        WebApplicationException {
         // TODO: Fix MessageBodyReaderSupport abstract method (remove it completely or add empty implementation?)
-        throw new RuntimeException("This should never be called, because we override the readFrom(all-parameters) method.");
+        throw new RuntimeException("This should never be called, because we override the readFrom(all-parameters) method.")
     }
 }

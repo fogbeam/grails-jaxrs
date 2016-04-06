@@ -13,19 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.jaxrs.provider;
+package org.grails.plugins.jaxrs.provider
 
-import grails.converters.XML;
-import org.grails.web.converters.configuration.ConvertersConfigurationHolder;
+import grails.converters.XML
+import org.grails.web.converters.configuration.ConvertersConfigurationHolder
 
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.ext.Provider;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import javax.ws.rs.Produces
+import javax.ws.rs.WebApplicationException
+import javax.ws.rs.core.MultivaluedMap
+import javax.ws.rs.ext.Provider
 
 /**
  * Provider for Grails' {@link XML} converter class.
@@ -36,38 +32,30 @@ import java.io.Writer;
  * <pre>
  * &#064;Path('/notes')
  * &#064;Produces('text/xml') // or 'application/xml'
- * class NotesResource {
- *
+ * class NotesResource {*
  *      &#064;GET
- *      XML findNotes() {
- *          Note.findAll() as XML
- *      }
- *
- * }
- * </pre>
+ *      XML findNotes() {*          Note.findAll() as XML
+ *}*
+ *}* </pre>
  *
  * Alternatively, one could write
  *
  * <pre>
  * &#064;Path('/notes')
  * &#064;Produces('text/xml') // or 'application/xml'
- * class NotesResource {
- *
+ * class NotesResource {*
  *      &#064;GET
- *      Response findNotes() {
- *          Response.ok(Note.findAll() as XML).build()
- *      }
- *
- * }
- * </pre>
+ *      Response findNotes() {*          Response.ok(Note.findAll() as XML).build()
+ *}*
+ *}* </pre>
  *
  * @author Martin Krasser
  */
 @Provider
-@Produces({"text/xml", "application/xml"})
-public class XMLWriter extends MessageBodyWriterSupport<XML> {
+@Produces(["text/xml", "application/xml"])
+class XMLWriter extends MessageBodyWriterSupport<XML> {
 
-    public static final String DEFAULT_CHARSET = "UTF-8";
+    static final String DEFAULT_CHARSET = "UTF-8"
 
     /**
      * Renders the <code>xml</code> object to the response's
@@ -84,8 +72,8 @@ public class XMLWriter extends MessageBodyWriterSupport<XML> {
     @Override
     protected void writeTo(XML xml, MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream)
         throws IOException, WebApplicationException {
-        String charset = ConvertersConfigurationHolder.getConverterConfiguration(XML.class).getEncoding();
-        Writer writer = new OutputStreamWriter(entityStream, charset == null ? DEFAULT_CHARSET : charset);
-        xml.render(writer);
+        String charset = ConvertersConfigurationHolder.getConverterConfiguration(XML.class).getEncoding()
+        Writer writer = new OutputStreamWriter(entityStream, charset == null ? DEFAULT_CHARSET : charset)
+        xml.render(writer)
     }
 }

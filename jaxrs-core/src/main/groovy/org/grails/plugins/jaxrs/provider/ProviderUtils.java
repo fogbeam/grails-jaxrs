@@ -60,7 +60,7 @@ public class ProviderUtils {
     /**
      * Checks <code>mediaType</code> for XML compatibility.
      *
-     * @param mediaType
+     * @param mediaType media type
      * @return <code>true</code> if <code>mediaType</code> is compatible with
      *         either <code>text/xml</code> or <code>application/xml</code>.
      */
@@ -73,7 +73,7 @@ public class ProviderUtils {
     /**
      * Checks <code>mediaType</code> for JSON compatibility.
      *
-     * @param mediaType
+     * @param mediaType media type
      * @return <code>true</code> if <code>mediaType</code> is compatible with
      *         either <code>text/x-json</code> or <code>application/json</code>.
      */

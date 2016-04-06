@@ -13,55 +13,53 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.jaxrs.provider;
+package org.grails.plugins.jaxrs.provider
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.ext.MessageBodyReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
+import javax.ws.rs.WebApplicationException
+import javax.ws.rs.core.MediaType
+import javax.ws.rs.core.MultivaluedMap
+import javax.ws.rs.ext.MessageBodyReader
+import java.lang.annotation.Annotation
+import java.lang.reflect.Type
 
-import static org.grails.plugins.jaxrs.provider.ProviderUtils.getReaderTypeArgument;
+import static org.grails.plugins.jaxrs.provider.ProviderUtils.getReaderTypeArgument
 
 /**
  * Base class for simple message body readers.
  *
- * @param <T> type of object to be read from the request entity.
+ * @param < T >  type of object to be read from the request entity.
  * @author Martin Krasser
  */
-public abstract class MessageBodyReaderSupport<T> extends ProviderSupport implements MessageBodyReader<T> {
+abstract class MessageBodyReaderSupport<T> extends ProviderSupport implements MessageBodyReader<T> {
 
-    public MessageBodyReaderSupport() {
-        setTypeArgument(getReaderTypeArgument(this));
+    MessageBodyReaderSupport() {
+        setTypeArgument(getReaderTypeArgument(this))
     }
 
     /**
-     * @see #isSupported(Class, Type, Annotation[], MediaType)
+     * @see #isSupported(Class, Type, Annotation [ ], MediaType)
      */
-    public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
-        return isSupported(type, genericType, annotations, mediaType);
+    boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
+        return isSupported(type, genericType, annotations, mediaType)
     }
 
-    public T readFrom(Class<T> type, Type genericType,
+    T readFrom(Class<T> type, Type genericType,
                       Annotation[] annotations, MediaType mediaType,
                       MultivaluedMap<String, String> httpHeaders, InputStream entityStream)
         throws IOException, WebApplicationException {
-        return readFrom(httpHeaders, entityStream);
+        return readFrom(httpHeaders, entityStream)
     }
 
     /**
      * Reads the request entity from the input stream and returns an object of
      * type given by this class type parameter.
      *
-     * @param httpHeaders  HTTP request headers.
+     * @param httpHeaders HTTP request headers.
      * @param entityStream request entity input stream.
      * @return object representation of entity stream.
      * @throws IOException
      * @throws WebApplicationException
      */
-    public abstract T readFrom(MultivaluedMap<String, String> httpHeaders, InputStream entityStream)
-        throws IOException, WebApplicationException;
+    abstract T readFrom(MultivaluedMap<String, String> httpHeaders, InputStream entityStream)
+        throws IOException, WebApplicationException
 }
