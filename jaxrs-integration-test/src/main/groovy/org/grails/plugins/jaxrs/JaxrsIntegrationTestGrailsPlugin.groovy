@@ -6,12 +6,12 @@ class JaxrsIntegrationTestGrailsPlugin extends Plugin {
     /**
      * Version of Grails the plugin is meant for.
      */
-    def grailsVersion = "3.1.4 > *"
+    def grailsVersion = "3.0.0 > *"
 
     /**
      * Plugin title.
      */
-    def title = "Integration test framework for the JAX-RS Grails plugin."
+    def title = "JAX-RS Integration Test Plugin"
 
     /**
      * Plugin author.
@@ -26,12 +26,12 @@ class JaxrsIntegrationTestGrailsPlugin extends Plugin {
     /**
      * Plugin description.
      */
-    def description = 'TODO'
+    def description = 'A plugin that provides helper classes to assist in the testing of JAX-RS resources.'
 
     /**
      * URL to the plugin's documentation.
      */
-    def documentation = "TODO"
+    def documentation = 'https://budjb.github.io/grails-jaxrs/3.x/latest/'
 
     /**
      * Project license.
@@ -41,10 +41,10 @@ class JaxrsIntegrationTestGrailsPlugin extends Plugin {
     /**
      * Location of the plugin's issue tracker.
      */
-    def issueManagement = "https://github.com/budjb/grails-jaxrs/issues"
+    def issueManagement = [url: 'https://github.com/budjb/grails-jaxrs/issues']
 
     /**
      * Online location of the plugin's browseable source code.
      */
-    def scm = "https://github.com/budjb/grails-jaxrs"
+    def scm = [url: 'https://github.com/budjb/grails-jaxrs']
 }

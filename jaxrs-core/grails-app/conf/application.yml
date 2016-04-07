@@ -83,4 +83,4 @@ endpoints:
 grails:
     doc:
         title: JAX-RS Project
-        authors: Bud Byrd, Martin Krasser, Davide Cavestro, Noam Y. Tenne
+        authors: Bud Byrd, Donald Jackson, Martin Krasser, Davide Cavestro, Noam Y. Tenne

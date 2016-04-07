@@ -1,11 +1,13 @@
 allprojects {
-    version = '3.0.0'
+    version = '3.0.1'
     group = 'org.grails.plugins'
 
     ext {
         publishGithubSlug = 'budjb/grails-jaxrs'
         publishLicense = 'Apache-2.0'
-        publishDevelopers = [budjb: 'Bud Byrd']
+        publishDevelopers = [budjb: 'Bud Byrd', donaldjackson: 'Donald Jackson']
         publishRepo = 'grails-plugins'
+
+        jdkCompatibility = 1.7
     }
 }

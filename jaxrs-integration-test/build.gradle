@@ -22,6 +22,9 @@ ext {
     gradleWrapperVersion = project.gradleWrapperVersion
 }
 
+sourceCompatibility = jdkCompatibility
+targetCompatibility = jdkCompatibility
+
 repositories {
     mavenLocal()
     maven { url "https://repo.grails.org/grails/core" }
@@ -65,8 +68,5 @@ grailsPublish {
         name = publishLicense
     }
     title = "jaxrs-integration-test"
-    desc = '''The jaxrs project is a set of Grails plugins that supports the development of RESTful web services based
-on the Java API for RESTful Web Services. The jaxrs-integration-test plugin provides classes to help with integration
-testing.'''
     developers = publishDevelopers
 }

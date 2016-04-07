@@ -1,3 +1,5 @@
+rootProject.name = 'jaxrs'
+
 include 'jaxrs-core'
 include 'jaxrs-jersey1'
 include 'jaxrs-restlet'
