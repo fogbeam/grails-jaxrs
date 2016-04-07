@@ -144,11 +144,7 @@ mechanism for implementing  RESTful web services.
 
     /**
      * Reconfigures the JaxrsApplicationConfig with plugin- and application-specific
-     * JAX-RS resource and provider classes. Configures the JaxrsContext
-     * with the JAX-RS implementation to use. The name of the JAX-RS
-     * implementation is obtained from the configuration property
-     * <code>org.grails.jaxrs.provider.name</code>. Default value is
-     * <code>jersey</code>.
+     * JAX-RS resource and provider classes.
      */
     void doWithApplicationContext() {
         if (!isEnabled(grailsApplication)) {

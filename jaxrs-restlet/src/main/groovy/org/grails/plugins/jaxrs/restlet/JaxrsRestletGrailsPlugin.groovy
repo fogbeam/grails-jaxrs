@@ -1,9 +1,8 @@
-package org.grails.plugins.jaxrs
+package org.grails.plugins.jaxrs.restlet
 
 import grails.plugins.Plugin
-import org.grails.plugins.jaxrs.jersey.JerseyServletFactory
 
-class JaxrsJersey1GrailsPlugin extends Plugin {
+class JaxrsRestletGrailsPlugin extends Plugin {
     /**
      * Version of Grails the plugin is meant for.
      */
@@ -12,7 +11,7 @@ class JaxrsJersey1GrailsPlugin extends Plugin {
     /**
      * Plugin title.
      */
-    def title = "JAX-RS Jersey 1.x Implementation Plugin"
+    def title = "JAX-RS Restlet Implementation Plugin"
 
     /**
      * Plugin author.
@@ -27,7 +26,7 @@ class JaxrsJersey1GrailsPlugin extends Plugin {
     /**
      * Plugin description.
      */
-    def description = 'A plugin that provides the Jersey 1.x implementation of the JAX-RS plugin.'
+    def description = 'A plugin that provides the Restlet implement of the JAX-RS plugin.'
 
     /**
      * URL to the plugin's documentation.
@@ -55,7 +54,7 @@ class JaxrsJersey1GrailsPlugin extends Plugin {
      * @return
      */
     Closure doWithSpring() {{ ->
-        jaxrsServletFactory(JerseyServletFactory) { bean ->
+        jaxrsServletFactory(RestletServletFactory) { bean ->
             bean.autowire = true
         }
     }}

@@ -1,4 +1,4 @@
-package org.grails.plugins.jaxrs.jersey
+package org.grails.plugins.jaxrs.jersey1
 
 import com.sun.jersey.api.core.DefaultResourceConfig
 import com.sun.jersey.api.core.PackagesResourceConfig
@@ -51,7 +51,7 @@ class JerseyServletFactory implements ServletFactory {
      */
     @Override
     String getRuntimeDelegateClassName() {
-        return "com.sun.jersey.server.impl.provider.RuntimeDelegateImpl"
+        return "com.sun.jersey1.server.impl.provider.RuntimeDelegateImpl"
     }
 
     /**
@@ -74,7 +74,7 @@ class JerseyServletFactory implements ServletFactory {
      * @return
      */
     String getProviderExtraPaths() {
-        // TODO: change this path to be jersey-specific
+        // TODO: change this path to be jersey1-specific
         def paths = grailsApplication.config.org.grails.jaxrs.provider.extra.paths
 
         if (!(paths instanceof String) || !paths) {

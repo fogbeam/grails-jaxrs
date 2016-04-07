@@ -1,4 +1,4 @@
-package org.grails.plugins.jaxrs
+package org.grails.plugins.jaxrs.test
 
 import grails.boot.GrailsApp
 import grails.boot.config.GrailsAutoConfiguration
