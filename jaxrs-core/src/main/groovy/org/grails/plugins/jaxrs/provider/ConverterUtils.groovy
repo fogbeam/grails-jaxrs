@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 the original author or authors.
+ * Copyright 2009, 2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,7 @@ import grails.converters.JSON
 import grails.converters.XML
 import grails.core.GrailsApplication
 import groovy.json.JsonSlurper
-import org.apache.commons.logging.Log
-import org.apache.commons.logging.LogFactory
+import groovy.util.logging.Slf4j
 import org.grails.databinding.xml.GPathResultMap
 import org.grails.web.converters.configuration.ConvertersConfigurationHolder
 
@@ -32,10 +31,8 @@ import javax.ws.rs.core.MultivaluedMap
  *
  * @author Martin Krasser
  */
+@Slf4j
 class ConverterUtils {
-
-    static LOG = null;//LogFactory.getLog(ConverterUtils)
-
     /**
      * Returns character encoding settings for the given Grails application.
      *
@@ -96,7 +93,7 @@ class ConverterUtils {
     }
 
     static Map jsonToMap(InputStream input, String encoding) {
-        new JsonSlurper().parse(new InputStreamReader(input, encoding))
+        new JsonSlurper().parse(new InputStreamReader(input, encoding)) as Map
     }
 
     /**
@@ -110,12 +107,5 @@ class ConverterUtils {
      */
     static Map xmlToMap(InputStream input, String encoding) {
         new GPathResultMap(new XmlSlurper(false, false).parse(new InputStreamReader(input, encoding)))
-    }
-
-    private static Log getLogger() {
-        if(!LOG) {
-            LOG = LogFactory.getLog(ConverterUtils.class);
-        }
-        return LOG;
     }
 }

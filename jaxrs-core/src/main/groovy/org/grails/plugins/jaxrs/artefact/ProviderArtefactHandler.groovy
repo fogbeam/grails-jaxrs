@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 the original author or authors.
+ * Copyright 2009, 2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,7 @@
 package org.grails.plugins.jaxrs.artefact
 
 import grails.core.ArtefactHandlerAdapter
-import org.apache.commons.logging.Log
-import org.apache.commons.logging.LogFactory
+import groovy.util.logging.Slf4j
 
 import javax.ws.rs.ext.ExceptionMapper
 import javax.ws.rs.ext.MessageBodyReader
@@ -25,40 +24,54 @@ import javax.ws.rs.ext.MessageBodyWriter
 
 /**
  * @author Martin Krasser
+ * @author Bud Byrd
  */
-public class ProviderArtefactHandler extends ArtefactHandlerAdapter {
-    private static Log LOG = null
+@Slf4j
+class ProviderArtefactHandler extends ArtefactHandlerAdapter {
+    /**
+     * The type of the artefact.
+     */
+    static final String TYPE = "Provider"
 
-    public static final String TYPE = "Provider"
+    /**
+     * Name of the plugin that owns the artefact.
+     */
+    static final String PLUGIN_NAME = 'jaxrs-core'
 
-    public ProviderArtefactHandler() {
+    /**
+     * Constructor.
+     */
+    ProviderArtefactHandler() {
         super(TYPE, GrailsProviderClass.class, DefaultGrailsProviderClass.class, TYPE)
     }
 
     /**
-     * Returns <code>true</code> if the <code>clazz</code> either implements
-     * {@link MessageBodyReader}, {@link MessageBodyWriter} or
-     * {@link ExceptionMapper}.
+     * Returns <code>true</code> if the <code>clazz</code> either implements {@link MessageBodyReader},
+     * {@link MessageBodyWriter} or {@link ExceptionMapper}.
      *
-     * @param clazz
+     * @param clazz The type of the class.
      * @return <code>true</code> if the class is a JAX-RS provider.
      */
     @Override
-    public boolean isArtefactClass(Class clazz) {
+    boolean isArtefactClass(Class clazz) {
         if (clazz == null) {
             return false
         }
+
         boolean match = JaxrsClassHelper.isJaxrsProvider(clazz)
         if (match) {
-            getLogger().info("Detected JAX-RS provider: " + clazz.getName())
+            log.info("Detected JAX-RS provider: ${clazz.getName()}")
         }
         return match
     }
 
-    private static Log getLogger() {
-        if (!LOG) {
-            LOG = LogFactory.getLog(ProviderArtefactHandler)
-        }
-        return LOG
+    /**
+     * Returns the name of the plugin that owns the artefact.
+     *
+     * @return Name of the plugin that owns the artefact.
+     */
+    @Override
+    String getPluginName() {
+        return PLUGIN_NAME
     }
 }

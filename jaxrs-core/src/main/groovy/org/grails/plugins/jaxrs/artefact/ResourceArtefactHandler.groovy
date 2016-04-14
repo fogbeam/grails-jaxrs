@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 the original author or authors.
+ * Copyright 2009, 2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,28 @@
 package org.grails.plugins.jaxrs.artefact
 
 import grails.core.ArtefactHandlerAdapter
-import org.apache.commons.logging.Log
-import org.apache.commons.logging.LogFactory
+import groovy.util.logging.Slf4j
 
 /**
  * @author Martin Krasser
+ * @author Bud Byrd
  */
-public class ResourceArtefactHandler extends ArtefactHandlerAdapter {
-    private static Log LOG = null
+@Slf4j
+class ResourceArtefactHandler extends ArtefactHandlerAdapter {
+    /**
+     * The type of the artefact.
+     */
+    static final String TYPE = "Resource"
 
-    public static final String TYPE = "Resource"
+    /**
+     * Name of the plugin that owns the artefact.
+     */
+    static final String PLUGIN_NAME = 'jaxrs-core'
 
-    public ResourceArtefactHandler() {
+    /**
+     * Constructor.
+     */
+    ResourceArtefactHandler() {
         super(TYPE, GrailsResourceClass.class, DefaultGrailsResourceClass.class, TYPE)
     }
 
@@ -36,25 +46,29 @@ public class ResourceArtefactHandler extends ArtefactHandlerAdapter {
      * JAX-RS annotation on class-level or method-level and none of the provider
      * interfaces is implemented.
      *
-     * @param clazz
+     * @param clazz The type of the class.
      * @return <code>true</code> if the class is a JAX-RS resource.
      */
     @Override
-    public boolean isArtefactClass(Class clazz) {
+    boolean isArtefactClass(Class clazz) {
         if (clazz == null) {
-            return false;
+            return false
         }
+
         boolean match = JaxrsClassHelper.isJaxrsResource(clazz)
         if (match) {
-            getLogger().info("Detected JAX-RS resource: " + clazz.getName())
+            log.info("Detected JAX-RS resource: " + clazz.getName())
         }
         return match
     }
 
-    private static Log getLogger() {
-        if (!LOG) {
-            LOG = LogFactory.getLog(ResourceArtefactHandler)
-        }
-        return LOG
+    /**
+     * Returns the name of the plugin that owns the artefact.
+     *
+     * @return Name of the plugin that owns the artefact.
+     */
+    @Override
+    String getPluginName() {
+        return PLUGIN_NAME
     }
 }
