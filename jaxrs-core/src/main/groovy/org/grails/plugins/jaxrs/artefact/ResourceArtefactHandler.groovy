@@ -16,13 +16,13 @@
 package org.grails.plugins.jaxrs.artefact
 
 import grails.core.ArtefactHandlerAdapter
-import groovy.util.logging.Slf4j
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 /**
  * @author Martin Krasser
  * @author Bud Byrd
  */
-@Slf4j
 class ResourceArtefactHandler extends ArtefactHandlerAdapter {
     /**
      * The type of the artefact.
@@ -33,6 +33,11 @@ class ResourceArtefactHandler extends ArtefactHandlerAdapter {
      * Name of the plugin that owns the artefact.
      */
     static final String PLUGIN_NAME = 'jaxrs-core'
+
+    /**
+     * Logger.
+     */
+    private Logger log
 
     /**
      * Constructor.
@@ -57,7 +62,7 @@ class ResourceArtefactHandler extends ArtefactHandlerAdapter {
 
         boolean match = JaxrsClassHelper.isJaxrsResource(clazz)
         if (match) {
-            log.info("Detected JAX-RS resource: " + clazz.getName())
+            getLog().info("Detected JAX-RS resource: " + clazz.getName())
         }
         return match
     }
@@ -70,5 +75,19 @@ class ResourceArtefactHandler extends ArtefactHandlerAdapter {
     @Override
     String getPluginName() {
         return PLUGIN_NAME
+    }
+
+    /**
+     * Return the class' logger.
+     *
+     * This is necessary to lazy-load the logger.
+     *
+     * @return
+     */
+    private Logger getLog() {
+        if (!log) {
+            log = LoggerFactory.getLogger(getClass())
+        }
+        return log
     }
 }
