@@ -1,6 +1,5 @@
 package org.grails.plugins.jaxrs
 
-import grails.core.GrailsApplication
 import grails.plugins.Plugin
 import groovy.util.logging.Slf4j
 import org.grails.plugins.jaxrs.artefact.ProviderArtefactHandler
@@ -122,7 +121,7 @@ mechanism for implementing  RESTful web services.
             "${DomainObjectReader.name}"(DomainObjectReader)
             "${DomainObjectWriter.name}"(DomainObjectWriter)
 
-            String requestedScope = getResourceScope(grailsApplication)
+            String requestedScope = getResourceScope()
 
             grailsApplication.resourceClasses.each { rc ->
                 "${rc.propertyName}"(rc.clazz) { bean ->
@@ -145,7 +144,7 @@ mechanism for implementing  RESTful web services.
      * JAX-RS resource and provider classes.
      */
     void doWithApplicationContext() {
-        if (!isEnabled(grailsApplication)) {
+        if (!isPluginEnabled()) {
             log.info "Not starting JAX-RS servlet due to application configuration."
             return
         }
@@ -171,7 +170,7 @@ mechanism for implementing  RESTful web services.
             return
         }
 
-        if (!isEnabled(grailsApplication)) {
+        if (!isPluginEnabled()) {
             log.info "Not restarting JAX-RS servlet due to application configuration."
             return
         }
@@ -188,8 +187,8 @@ mechanism for implementing  RESTful web services.
      * @param application
      * @return
      */
-    private static String getResourceScope(GrailsApplication application) {
-        def scope = application.config.org.grails.jaxrs.resource.scope
+    String getResourceScope() {
+        def scope = grailsApplication.config.org.grails.jaxrs.resource.scope
         if (!scope) {
             scope = 'prototype'
         }
@@ -202,8 +201,8 @@ mechanism for implementing  RESTful web services.
      * @param application
      * @return
      */
-    private static boolean isEnabled(GrailsApplication application) {
-        if (application.config.org.grails.jaxrs.enabled == false) {
+    private boolean isPluginEnabled() {
+        if (getGrailsApplication().config.org.grails.jaxrs.enabled == false) {
             return false
         }
         return true

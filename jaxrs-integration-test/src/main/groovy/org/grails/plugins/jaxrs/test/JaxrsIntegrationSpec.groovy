@@ -1,6 +1,7 @@
 package org.grails.plugins.jaxrs.test
 
 import grails.core.GrailsApplication
+import grails.web.mapping.UrlMappings
 import org.grails.plugins.jaxrs.JaxrsController
 import org.grails.plugins.jaxrs.core.JaxrsApplicationConfig
 import org.grails.plugins.jaxrs.core.JaxrsContext
@@ -58,6 +59,9 @@ abstract class JaxrsIntegrationSpec extends Specification {
     @Autowired
     GrailsApplication grailsApplication
 
+    @Autowired
+    UrlMappings grailsUrlMappingsHolder
+
     /**
      * Set up the environment for tests.
      */
@@ -72,6 +76,7 @@ abstract class JaxrsIntegrationSpec extends Specification {
         jaxrsUtil = new JaxrsUtil()
         jaxrsUtil.grailsApplication = grailsApplication
         jaxrsUtil.jaxrsContext = jaxrsContext
+        jaxrsUtil.grailsUrlMappingsHolder = grailsUrlMappingsHolder
 
         jaxrsUtil.setupJaxrsContext()
         jaxrsContext.applicationConfig.classes.addAll(getResources())

@@ -2,6 +2,7 @@ package org.grails.plugins.jaxrs.core
 
 import grails.core.GrailsApplication
 import grails.util.Holders
+import grails.web.mapping.UrlMappings
 import org.grails.plugins.jaxrs.artefact.ResourceArtefactHandler
 import org.grails.plugins.jaxrs.provider.*
 import org.slf4j.Logger
@@ -10,10 +11,12 @@ import org.springframework.context.ApplicationContext
 import org.springframework.web.context.support.WebApplicationContextUtils
 
 import javax.servlet.ServletContext
-import javax.servlet.ServletRequest
 import javax.servlet.ServletResponse
 import javax.servlet.ServletResponseWrapper
+import javax.ws.rs.HttpMethod
 import javax.ws.rs.Path
+import java.lang.annotation.Annotation
+import java.lang.reflect.Method
 
 /**
  * Provides utility methods to the JAX-RS plugin.
@@ -40,6 +43,11 @@ class JaxrsUtil {
      * JAX-RS context instance.
      */
     JaxrsContext jaxrsContext
+
+    /**
+     * URL mappings holder.
+     */
+    UrlMappings grailsUrlMappingsHolder
 
     /**
      * Returns the singleton instance of this class from the Spring application context.
@@ -95,25 +103,21 @@ class JaxrsUtil {
      *
      * @return A list of root paths used for URL mappings.
      */
-    List<String> retrieveRootPathList() {
-        List<String> rootPaths = []
+    List<String> retrieveMappingsList() {
+        List<Class<?>> candidates = []
 
-        grailsApplication.getArtefacts(ResourceArtefactHandler.TYPE)*.clazz.each {
-            try {
-                String path = it.getAnnotation(Path).value()
+        candidates.addAll(grailsApplication.getArtefacts(ResourceArtefactHandler.TYPE)*.clazz)
+        candidates.addAll(jaxrsContext.applicationConfig.classes)
 
-                List tokens = path.tokenize('/')
-
-                if (tokens.size()) {
-                    rootPaths << "/${tokens[0]}"
-                }
-            }
-            catch (NullPointerException e) {
-                log.warn("Resource class '${it.name} has no root path defined", e)
+        List<String> paths = []
+        candidates.each {
+            Path rootPath = getRootPath(it)
+            getResourcePaths(it).each {
+                paths.add(buildMappingFromPath(rootPath, it))
             }
         }
 
-        return rootPaths
+        return paths.unique()
     }
 
     /**
@@ -150,16 +154,89 @@ class JaxrsUtil {
         config.classes << DomainObjectReader
         config.classes << DomainObjectWriter
 
-        grailsApplication.getArtefacts('Resource').each { clazz ->
-            config.classes << clazz.clazz
+        config.classes.addAll(grailsApplication.getArtefacts('Resource').collect { it.clazz })
+        config.classes.addAll(grailsApplication.getArtefacts('Provider').collect { it.clazz })
+
+        grailsApplication.mainContext.getBeansOfType(ResourceRegistrar).values().each {
+            config.classes.addAll(it.getResourceClasses())
         }
-        grailsApplication.getArtefacts('Provider').each { clazz ->
-            config.classes << clazz.clazz
+
+        List<String> mappings = retrieveMappingsList()
+
+        if (log.isTraceEnabled()) {
+            mappings.each {
+                log.trace("Setting URL mapping for jaxrs controller: ${it}")
+            }
+        }
+
+        grailsUrlMappingsHolder.addMappings {
+            mappings.each { pattern ->
+                "${pattern}"(controller: "jaxrs")
+            }
+            "/application.wadl"(controller: "jaxrs")
         }
     }
 
     /**
-     * Returns any extra provider initialization paramters configured by the application.
+     * Returns the root path of the given resource class as defined by the {@link Path} annotation.
+     *
+     * If there is no {@link Path} annotation, <code>null</code> is returned.
+     *
+     * @param clazz Class to get the root resource path for.
+     * @return The root resource path, or null.
+     */
+    Path getRootPath(Class<?> clazz) {
+        if (!clazz) {
+            return null
+        }
+
+        Path path = clazz.getAnnotation(Path)
+
+        if (path) {
+            return path
+        }
+
+        return getRootPath(clazz.getSuperclass())
+    }
+
+    /**
+     * Returns a list of paths associated with any methods in the given class.
+     *
+     * @param clazz Class to scan for {@link Path} annotations on its methods.
+     * @return List of paths.
+     */
+    List<Path> getResourcePaths(Class<?> clazz) {
+        if (!clazz) {
+            return []
+        }
+
+        List<Path> paths = []
+
+        clazz.getMethods().each {
+            if (isJaxrsResource(it)) {
+                paths.add(it.getAnnotation(Path))
+            }
+        }
+
+        paths.addAll(getResourcePaths(clazz.getSuperclass()))
+
+        return paths
+    }
+
+    /**
+     * Build a URL mapping string from the given root path and method path.
+     *
+     * @param root Path annotation assigned at the class level.
+     * @param method Path annotation assigned at the method level.
+     * @return A compiled URL mapping.
+     */
+    static String buildMappingFromPath(Path root, Path method) {
+        return "${root?.value() ?: ''}/${method?.value() ?: ''}"
+            .replaceAll(/\/+/, '/').replaceAll(/\{[^}]*\}/, '*').replaceAll(/\/$/, '')
+    }
+
+    /**
+     * Returns any extra provider initialization parameters configured by the application.
      *
      * @param application
      * @return
@@ -168,5 +245,20 @@ class JaxrsUtil {
         ConfigObject config = grailsApplication.config.org.grails.jaxrs.provider.init.parameters
 
         return config.flatten()
+    }
+
+    /**
+     * Determines whether the given {@link Method} is a JAX-RS resource.
+     *
+     * @param method Method to check.
+     * @return Whether the given {@link Method} is a JAX-RS resource.
+     */
+    static boolean isJaxrsResource(Method method) {
+        for (Annotation annotation : method.getAnnotations()) {
+            if (annotation.annotationType().getAnnotation(HttpMethod)) {
+                return true
+            }
+        }
+        return false
     }
 }

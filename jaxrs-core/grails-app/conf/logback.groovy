@@ -22,5 +22,6 @@ if (Environment.isDevelopmentMode() && targetDir) {
     logger("StackTrace", ERROR, ['FULL_STACKTRACE'], false)
 }
 
-logger 'com.sun.jersey', INFO
-logger 'org.grails.plugins.jaxrs', INFO
+logger 'com.sun.jersey', ALL
+logger 'org.grails.plugins.jaxrs', ALL
+logger 'com.budjb', ALL
