@@ -18,14 +18,7 @@ package org.grails.plugins.jaxrs
 import grails.test.mixin.TestMixin
 import grails.test.mixin.support.GrailsUnitTestMixin
 import org.grails.plugins.jaxrs.artefact.JaxrsClassHelper
-import org.grails.plugins.jaxrs.support.TestA
-import org.grails.plugins.jaxrs.support.TestB
-import org.grails.plugins.jaxrs.support.TestC
-import org.grails.plugins.jaxrs.support.TestD
-import org.grails.plugins.jaxrs.support.TestE
-import org.grails.plugins.jaxrs.support.TestH1B
-import org.grails.plugins.jaxrs.support.TestH2B
-import org.grails.plugins.jaxrs.support.TestH3B
+import org.grails.plugins.jaxrs.test.*
 import spock.lang.Specification
 
 /**

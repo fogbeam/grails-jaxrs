@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.jaxrs.resources
+package org.grails.plugins.jaxrs.test.implementation.resources
 
-import org.grails.plugins.jaxrs.support.TestPerson
+import org.grails.plugins.jaxrs.test.implementation.support.TestPerson
 
 import javax.ws.rs.*
 

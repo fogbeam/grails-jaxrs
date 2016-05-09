@@ -59,6 +59,8 @@ dependencies {
 
     compile project(':jaxrs-core')
     compile "com.sun.jersey.contribs:jersey-spring:$jerseyVersion"
+
+    testCompile project(':jaxrs-integration-test')
 }
 
 task wrapper(type: Wrapper) {

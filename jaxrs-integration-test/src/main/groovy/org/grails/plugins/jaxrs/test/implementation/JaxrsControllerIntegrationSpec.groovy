@@ -13,20 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.jaxrs
+package org.grails.plugins.jaxrs.test.implementation
 
-import grails.test.mixin.integration.Integration
-import org.grails.plugins.jaxrs.resources.*
 import org.grails.plugins.jaxrs.test.JaxrsIntegrationSpec
 import org.grails.plugins.jaxrs.test.JaxrsRequestProperties
+import org.grails.plugins.jaxrs.test.implementation.resources.*
 import spock.lang.Unroll
 
 /**
  * @author Noam Y. Tenne
  * @author Bud Byrd
  */
-@Integration
-class JaxrsControllerIntegrationSpec extends JaxrsIntegrationSpec {
+abstract class JaxrsControllerIntegrationSpec extends JaxrsIntegrationSpec {
     /**
      * Return the list of resources to build the JAX-RS servlet with.
      *

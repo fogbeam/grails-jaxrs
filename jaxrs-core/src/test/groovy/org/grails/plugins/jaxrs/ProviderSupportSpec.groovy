@@ -16,6 +16,7 @@
 package org.grails.plugins.jaxrs
 
 import org.grails.plugins.jaxrs.provider.MessageBodyWriterSupport
+import spock.lang.Specification
 
 import javax.ws.rs.core.MultivaluedMap
 
@@ -23,7 +24,7 @@ import javax.ws.rs.core.MultivaluedMap
  * @author Martin Krasser
  * @author Bud Byrd
  */
-class ProviderSupportSpec {
+class ProviderSupportSpec extends Specification {
     class TestX {
 
     }

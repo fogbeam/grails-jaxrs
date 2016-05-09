@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2011 the original author or authors.
+ * Copyright 2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,28 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.jaxrs.resources
+package org.grails.plugins.jaxrs.test.implementation.resources
 
-import grails.converters.XML
-import org.grails.plugins.jaxrs.support.TestPerson
+import org.grails.plugins.jaxrs.provider.MessageBodyReaderSupport
+import org.grails.plugins.jaxrs.test.implementation.support.CustomRequestEntity
 
 import javax.ws.rs.Consumes
-import javax.ws.rs.POST
-import javax.ws.rs.Path
-import javax.ws.rs.Produces
+import javax.ws.rs.core.MultivaluedMap
+import javax.ws.rs.ext.Provider
 
 /**
  * @author Martin Krasser
  */
-@Path('/test/06')
-class Test06Resource {
-    @POST
-    @Consumes('application/json')
-    @Produces('application/xml')
-    XML testPerson(Map params) {
-        def person = new TestPerson(params)
-        person.name = person.name.reverse()
-        person.age = person.age + 1
-        person as XML
-    }
+@Provider
+@Consumes('text/plain')
+class CustomRequestEntityReaderProvider extends MessageBodyReaderSupport<CustomRequestEntity> {
+     CustomRequestEntity readFrom(MultivaluedMap httpHeaders, InputStream entityStream) {
+         new CustomRequestEntity(content:entityStream.text)
+     }
 }

@@ -67,9 +67,6 @@ dependencies {
     compile('javax.ws.rs:jsr311-api:1.1.1') {
         exclude module: 'junit'
     }
-
-    testCompile project(':jaxrs-integration-test')
-    testCompile project(':jaxrs-jersey1')
 }
 
 

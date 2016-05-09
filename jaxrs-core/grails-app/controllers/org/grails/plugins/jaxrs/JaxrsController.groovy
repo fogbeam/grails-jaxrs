@@ -15,9 +15,9 @@
  */
 package org.grails.plugins.jaxrs
 
-import org.grails.plugins.jaxrs.core.JaxrsUtil
 import org.grails.plugins.jaxrs.core.JaxrsContext
 import org.grails.plugins.jaxrs.core.JaxrsRequestWrapper
+import org.grails.plugins.jaxrs.core.JaxrsUtil
 
 import javax.servlet.ServletResponse
 import javax.servlet.http.HttpServletResponse

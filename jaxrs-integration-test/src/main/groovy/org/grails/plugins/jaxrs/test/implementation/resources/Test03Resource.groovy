@@ -13,22 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.jaxrs.resources
+package org.grails.plugins.jaxrs.test.implementation.resources
 
-import org.grails.plugins.jaxrs.provider.MessageBodyWriterSupport
-import org.grails.plugins.jaxrs.support.CustomResponseEntity
+import grails.converters.JSON
+import org.grails.plugins.jaxrs.test.implementation.support.TestPerson
 
+import javax.ws.rs.Consumes
+import javax.ws.rs.POST
+import javax.ws.rs.Path
 import javax.ws.rs.Produces
-import javax.ws.rs.core.MultivaluedMap
-import javax.ws.rs.ext.Provider
-
 /**
  * @author Martin Krasser
  */
-@Provider
-@Produces('text/plain')
-class CustomResponseEntityWriterProvider extends MessageBodyWriterSupport<CustomResponseEntity> {
-     void writeTo(CustomResponseEntity entity, MultivaluedMap httpHeaders, OutputStream entityStream) {
-         entityStream << entity.content
-     }
+@Path('/test/03')
+class Test03Resource {
+
+    @POST
+    @Consumes('application/json')
+    @Produces('application/json')
+    JSON testPerson(Map params) {
+        def person = new TestPerson(params)
+        person.name = person.name.reverse()
+        person.age = person.age + 1
+        person as JSON
+    }
 }
