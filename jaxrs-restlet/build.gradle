@@ -20,7 +20,7 @@ apply plugin:"org.grails.grails-gsp"
 ext {
     grailsVersion = project.grailsVersion
     gradleWrapperVersion = project.gradleWrapperVersion
-    restletVersion = '2.1.4'
+    restletVersion = '2.3.6'
 }
 
 sourceCompatibility = jdkCompatibility
@@ -66,6 +66,7 @@ dependencies {
 
     compile 'commons-fileupload:commons-fileupload:1.3.1'
     compile 'com.sun.mail:javax.mail:1.5.5'
+    compile 'javax.cache:cache-api:1.0.0'
 
     testCompile project(':jaxrs-integration-test')
 }
