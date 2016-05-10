@@ -1,3 +1,14 @@
+h3. Version 3.0.2
+* Add `ResourceRegistrar` and `ScanningResourceRegistrar` so that applications and plugins can provide a set of\
+  resources or providers outside of the normal artefact scanning process.
+* Move integration tests out of the `jaxrs-core` plugin and into the `jaxrs-integration-test` plugin.
+* Add tests to the `jaxrs-restlet` plugin.
+* Changed how URL mappings work:
+  * URL mappings are no longer configured statically via application configuration.
+  * URL mappings are compiled by scanning resource classes and their methods, and a new URL mapping entry will be added\
+    per unique path. This works for both resource classes present in `grails-app/resources` and other resource classes\
+    registered via other means.
+
 h3. Version 3.0.1
 * Fix *jaxrs-core* plugin descriptor class name.
 * Compile the plugin with JDK 1.7 compatibility.
