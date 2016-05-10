@@ -8,6 +8,7 @@ h3. Version 3.0.2
   * URL mappings are compiled by scanning resource classes and their methods, and a new URL mapping entry will be added\
     per unique path. This works for both resource classes present in `grails-app/resources` and other resource classes\
     registered via other means.
+* Update restlet to 2.3.6.
 
 h3. Version 3.0.1
 * Fix *jaxrs-core* plugin descriptor class name.
