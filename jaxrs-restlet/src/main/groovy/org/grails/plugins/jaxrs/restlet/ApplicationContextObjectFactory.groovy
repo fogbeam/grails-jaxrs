@@ -2,6 +2,7 @@ package org.grails.plugins.jaxrs.restlet
 
 import org.restlet.ext.jaxrs.InstantiateException
 import org.restlet.ext.jaxrs.ObjectFactory
+import org.springframework.beans.BeansException
 import org.springframework.context.ApplicationContext
 
 import javax.servlet.ServletContext
@@ -38,6 +39,12 @@ class ApplicationContextObjectFactory implements ObjectFactory {
      * @throws InstantiateException
      */
     public <T> T getInstance(Class<T> jaxRsClass) throws InstantiateException {
-        return (T) applicationContext.getBeansOfType(jaxRsClass).values().iterator().next()
+        Map beans = applicationContext.getBeansOfType(jaxRsClass)
+
+        if (beans.size()) {
+            return beans.values().first()
+        }
+
+        return jaxRsClass.newInstance()
     }
 }

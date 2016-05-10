@@ -54,7 +54,7 @@ abstract class JaxrsControllerIntegrationSpec extends JaxrsIntegrationSpec {
 
         then:
         response.status == 200
-        response.contentType == 'text/plain'
+        response.contentType.startsWith('text/plain')
         response.bodyAsString == 'test01'
     }
 
@@ -69,7 +69,7 @@ abstract class JaxrsControllerIntegrationSpec extends JaxrsIntegrationSpec {
 
         then:
         response.status == 200
-        response.contentType == 'text/plain'
+        response.contentType.startsWith('text/plain')
         response.bodyAsString == 'response:hello'
     }
 
@@ -84,9 +84,9 @@ abstract class JaxrsControllerIntegrationSpec extends JaxrsIntegrationSpec {
 
         then:
         response.status == 200
-        response.contentType == 'application/json'
+        response.contentType.startsWith('application/json')
 
-        Map data = response.bodyAsJson
+        Map data = response.bodyAsJson as Map
         data.age == 39
         data.name == "ekim"
     }
@@ -103,7 +103,7 @@ abstract class JaxrsControllerIntegrationSpec extends JaxrsIntegrationSpec {
 
         then:
         response.status == 200
-        response.contentType == 'application/xml'
+        response.contentType.startsWith('application/xml')
 
         def data = response.bodyAsXml
         data['age'].text() == '39'
@@ -122,7 +122,7 @@ abstract class JaxrsControllerIntegrationSpec extends JaxrsIntegrationSpec {
 
         then:
         response.status == 200
-        response.contentType == 'application/xml'
+        response.contentType.startsWith('application/xml')
 
         def data = response.bodyAsXml
         data['name'].text() == 'semaj'
@@ -140,7 +140,7 @@ abstract class JaxrsControllerIntegrationSpec extends JaxrsIntegrationSpec {
 
         then:
         response.status == 200
-        response.contentType == 'application/json'
+        response.contentType.startsWith('application/json')
 
         def data = response.bodyAsJson
         data.name == 'semaj'
@@ -160,7 +160,7 @@ abstract class JaxrsControllerIntegrationSpec extends JaxrsIntegrationSpec {
         ))
 
         then:
-        response.contentType == 'application/xml'
+        response.contentType.startsWith('application/xml')
 
         response.bodyAsString.contains('<list>')
         response.bodyAsString.contains('<name>n1</name>')
@@ -181,7 +181,7 @@ abstract class JaxrsControllerIntegrationSpec extends JaxrsIntegrationSpec {
 
         then:
         response.status == 200
-        response.contentType == 'application/xml'
+        response.contentType.startsWith('application/xml')
 
         response.bodyAsString.contains('<list>')
         response.bodyAsString.contains('<name>n1</name>')
@@ -221,7 +221,7 @@ abstract class JaxrsControllerIntegrationSpec extends JaxrsIntegrationSpec {
         ))
 
         then:
-        response.contentType == 'application/json'
+        response.contentType.startsWith('application/json')
         response.bodyAsString.contains('"name":"n1"')
         response.bodyAsString.contains('"name":"n2"')
     }
@@ -264,7 +264,7 @@ abstract class JaxrsControllerIntegrationSpec extends JaxrsIntegrationSpec {
         then:
         response.status == 200
         response.bodyAsString == '{"age":1,"id":null,"name":"semaj","version":null}'
-        response.contentType == 'application/json'
+        response.contentType.startsWith('application/json')
     }
 
     def "Retrieve an HTML response from resource 05"() {
@@ -277,7 +277,7 @@ abstract class JaxrsControllerIntegrationSpec extends JaxrsIntegrationSpec {
         then:
         response.status == 200
         response.bodyAsString == '<html><body>test05</body></html>'
-        response.contentType == 'text/html'
+        response.contentType.startsWith('text/html')
     }
 
     def "Specify query params in the request path"() {
