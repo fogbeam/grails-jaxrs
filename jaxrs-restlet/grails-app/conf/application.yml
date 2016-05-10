@@ -1,6 +1,6 @@
 ---
 grails:
-    profile: web-plugin
+    profile: plugin
     doc:
         title: JAX-RS Project
         authors: Bud Byrd, Donald Jackson, Martin Krasser, Davide Cavestro, Noam Y. Tenne
