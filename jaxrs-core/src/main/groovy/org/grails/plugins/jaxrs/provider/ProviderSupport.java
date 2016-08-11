@@ -37,6 +37,12 @@ public abstract class ProviderSupport {
     /**
      * Returns <code>true</code> if {#link {@link #getTypeArgument()} is
      * assignable from <code>type</code>.
+     *
+     * @param type The type to check.
+     * @param genericType Generic type.
+     * @param annotations Annotations.
+     * @param mediaType Media type.
+     * @return Whether the type is supported.
      */
     public boolean isSupported(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
         return typeArgument.isAssignableFrom(type);

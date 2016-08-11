@@ -16,11 +16,11 @@ plugins {
     id "com.jfrog.bintray" version "1.2"
 }
 
-apply plugin:"eclipse"
-apply plugin:"idea"
-apply plugin:"org.grails.grails-plugin"
-apply plugin:"org.grails.grails-plugin-publish"
-apply plugin:"org.grails.grails-gsp"
+apply plugin: "eclipse"
+apply plugin: "idea"
+apply plugin: "org.grails.grails-plugin"
+apply plugin: "org.grails.grails-plugin-publish"
+apply plugin: "org.grails.grails-gsp"
 apply plugin: "org.grails.grails-doc"
 
 ext {
@@ -82,4 +82,18 @@ grailsPublish {
     }
     title = "jaxrs-core"
     developers = publishDevelopers
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            pom.withXml {
+                asNode().dependencies.'*'.findAll() {
+                    it.scope.text() == 'runtime' && project.configurations.compile.allDependencies.find { dep ->
+                        dep.name == it.artifactId.text()
+                    }
+                }.each { it.scope*.value = 'compile' }
+            }
+        }
+    }
 }

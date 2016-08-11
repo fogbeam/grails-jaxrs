@@ -11,11 +11,11 @@ buildscript {
     }
 }
 
-apply plugin:"eclipse"
-apply plugin:"idea"
-apply plugin:"org.grails.grails-plugin"
-apply plugin:"org.grails.grails-plugin-publish"
-apply plugin:"org.grails.grails-gsp"
+apply plugin: "eclipse"
+apply plugin: "idea"
+apply plugin: "org.grails.grails-plugin"
+apply plugin: "org.grails.grails-plugin-publish"
+apply plugin: "org.grails.grails-gsp"
 
 ext {
     grailsVersion = project.grailsVersion
@@ -59,6 +59,7 @@ dependencies {
 
     compile project(':jaxrs-core')
     compile "com.sun.jersey.contribs:jersey-spring:$jerseyVersion"
+    compile "com.sun.jersey:jersey-bundle:$jerseyVersion"
 
     testCompile project(':jaxrs-integration-test')
 }
@@ -75,4 +76,18 @@ grailsPublish {
     }
     title = "jaxrs-jersey1"
     developers = publishDevelopers
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            pom.withXml {
+                asNode().dependencies.'*'.findAll() {
+                    it.scope.text() == 'runtime' && project.configurations.compile.allDependencies.find { dep ->
+                        dep.name == it.artifactId.text()
+                    }
+                }.each { it.scope*.value = 'compile' }
+            }
+        }
+    }
 }

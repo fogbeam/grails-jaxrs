@@ -70,3 +70,17 @@ grailsPublish {
     title = "jaxrs-integration-test"
     developers = publishDevelopers
 }
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            pom.withXml {
+                asNode().dependencies.'*'.findAll() {
+                    it.scope.text() == 'runtime' && project.configurations.compile.allDependencies.find { dep ->
+                        dep.name == it.artifactId.text()
+                    }
+                }.each { it.scope*.value = 'compile' }
+            }
+        }
+    }
+}
