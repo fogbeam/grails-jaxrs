@@ -1,12 +1,18 @@
+h3. Version 3.0.3
+* Added missing @jersey-client@ dependency for the *jersey1* plugin.\
+  ([#25|https://github.com/budjb/grails-jaxrs/issues/25])
+* Refactored JAX-RS servlet initialization order due to call order differences between the embedded tomcat\
+  server and the standalone tomcat server. ([#26|https://github.com/budjb/grails-jaxrs/issues/26])
+
 h3. Version 3.0.2
-* Add `ResourceRegistrar` and `ScanningResourceRegistrar` so that applications and plugins can provide a set of\
+* Add @ResourceRegistrar@ and @ScanningResourceRegistrar@ so that applications and plugins can provide a set of\
   resources or providers outside of the normal artefact scanning process.
-* Move integration tests out of the `jaxrs-core` plugin and into the `jaxrs-integration-test` plugin.
-* Add tests to the `jaxrs-restlet` plugin.
+* Move integration tests out of the @jaxrs-core@ plugin and into the @jaxrs-integration-test@ plugin.
+* Add tests to the @jaxrs-restlet@ plugin.
 * Changed how URL mappings work:
   * URL mappings are no longer configured statically via application configuration.
   * URL mappings are compiled by scanning resource classes and their methods, and a new URL mapping entry will be added\
-    per unique path. This works for both resource classes present in `grails-app/resources` and other resource classes\
+    per unique path. This works for both resource classes present in @grails-app/resources@ and other resource classes\
     registered via other means.
 * Update restlet to 2.3.6.
 
