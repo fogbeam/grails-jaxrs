@@ -110,7 +110,7 @@ mechanism for implementing  RESTful web services.
                 jaxrsServletFactory = ref('jaxrsServletFactory')
             }
 
-            "${JaxrsUtil.BEAN_NAME}"(JaxrsUtil) { bean ->
+            jaxrsUtil(JaxrsUtil) { bean ->
                 bean.autowire = true
             }
 
@@ -149,9 +149,14 @@ mechanism for implementing  RESTful web services.
             return
         }
 
-        JaxrsUtil jaxrsUtil = JaxrsUtil.getInstance(applicationContext)
+        JaxrsUtil jaxrsUtil = applicationContext.getBean('jaxrsUtil', JaxrsUtil)
         jaxrsUtil.setupJaxrsContext()
-        jaxrsUtil.jaxrsContext.init()
+        jaxrsUtil.configureMappings()
+
+        JaxrsContext jaxrsContext = applicationContext.getBean('jaxrsContext', JaxrsContext)
+        if (jaxrsContext.isInit()) {
+            jaxrsContext.restart()
+        }
     }
 
     /**
@@ -175,9 +180,13 @@ mechanism for implementing  RESTful web services.
             return
         }
 
-        JaxrsUtil jaxrsUtil = JaxrsUtil.getInstance(applicationContext)
+        JaxrsUtil jaxrsUtil = applicationContext.getBean('jaxrsUtil', JaxrsUtil)
         jaxrsUtil.setupJaxrsContext()
-        jaxrsUtil.jaxrsContext.restart()
+        jaxrsUtil.configureMappings()
+
+
+        JaxrsContext jaxrsContext = applicationContext.getBean('jaxrsContext', JaxrsContext)
+        jaxrsContext.restart()
     }
 
     /**

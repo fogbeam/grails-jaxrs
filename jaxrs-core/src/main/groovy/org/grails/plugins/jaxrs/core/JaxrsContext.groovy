@@ -79,7 +79,9 @@ class JaxrsContext implements InitializingBean {
      * @throws IOException
      */
     void restart() throws ServletException, IOException {
-        destroy()
+        if (isInit()) {
+            destroy()
+        }
         init()
     }
 
@@ -93,11 +95,16 @@ class JaxrsContext implements InitializingBean {
             throw new IllegalStateException("can not start the JAX-RS servlet because has already been started")
         }
 
+        if (!servletContext) {
+            throw new IllegalStateException("can not start the JAX-RS servlet because no servlet context has been set")
+        }
+
         RuntimeDelegate.setInstance(null)
 
         System.setProperty(RuntimeDelegate.JAXRS_RUNTIME_DELEGATE_PROPERTY, jaxrsServletFactory.getRuntimeDelegateClassName())
 
         JaxrsServletConfig servletConfig = createServletConfig()
+
         jaxrsServlet = jaxrsServletFactory.createServlet(applicationConfig, servletConfig)
         jaxrsServlet.init(servletConfig)
     }
@@ -154,5 +161,14 @@ class JaxrsContext implements InitializingBean {
         if (!jaxrsServletFactory) {
             throw new NullPointerException("the 'jaxrsServletFactory' Spring bean is not set")
         }
+    }
+
+    /**
+     * Returns whether the JAX-RS context is initialized.
+     *
+     * @return Whether the JAX-RS context is initialized.
+     */
+    boolean isInit() {
+        return jaxrsServlet != null
     }
 }

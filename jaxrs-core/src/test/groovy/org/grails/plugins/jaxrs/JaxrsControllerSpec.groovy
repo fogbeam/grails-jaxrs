@@ -67,14 +67,9 @@ class JaxrsControllerSpec extends Specification {
         controller.jaxrsContext = jaxrsContext
 
         jaxrsUtil = new JaxrsUtil()
-        JaxrsUtil._instance = jaxrsUtil
         controller.jaxrsUtil = jaxrsUtil
 
         jaxrsContext.init()
-    }
-
-    def cleanup() {
-        JaxrsUtil._instance = null
     }
 
     def 'Ensure requests get handed off correctly'() {

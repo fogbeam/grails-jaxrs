@@ -1,16 +1,12 @@
 package org.grails.plugins.jaxrs.core
 
 import grails.core.GrailsApplication
-import grails.util.Holders
 import grails.web.mapping.UrlMappings
 import org.grails.plugins.jaxrs.artefact.ResourceArtefactHandler
 import org.grails.plugins.jaxrs.provider.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.context.ApplicationContext
-import org.springframework.web.context.support.WebApplicationContextUtils
 
-import javax.servlet.ServletContext
 import javax.servlet.ServletResponse
 import javax.servlet.ServletResponseWrapper
 import javax.ws.rs.HttpMethod
@@ -25,19 +21,9 @@ import java.lang.reflect.Method
  */
 class JaxrsUtil {
     /**
-     * Name of the spring bean this class should be registered as.
-     */
-    static final String BEAN_NAME = 'jaxrsUtil'
-
-    /**
      * Name of the request attribute for storing the request URI.
      */
     static final String REQUEST_URI_ATTRIBUTE_NAME = 'org.grails.jaxrs.request.uri'
-
-    /**
-     * Singleton instance of this utility class.
-     */
-    static JaxrsUtil _instance
 
     /**
      * JAX-RS context instance.
@@ -48,44 +34,6 @@ class JaxrsUtil {
      * URL mappings holder.
      */
     UrlMappings grailsUrlMappingsHolder
-
-    /**
-     * Returns the singleton instance of this class from the Spring application context.
-     *
-     * @return
-     */
-    static JaxrsUtil getInstance() {
-        if (_instance) {
-            return _instance
-        }
-        return getInstance(Holders.applicationContext)
-    }
-
-    /**
-     * Returns the singleton instance of this class from the Spring application context.
-     *
-     * @param applicationContext
-     * @return
-     */
-    static JaxrsUtil getInstance(ApplicationContext applicationContext) {
-        if (!_instance) {
-            _instance = applicationContext.getBean(BEAN_NAME, JaxrsUtil)
-        }
-        return _instance
-    }
-
-    /**
-     * Returns the singleton instance of this class from the Spring application context.
-     *
-     * @param servletContext
-     * @return
-     */
-    static JaxrsUtil getInstance(ServletContext servletContext) {
-        if (_instance) {
-            return _instance
-        }
-        return getInstance(WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext))
-    }
 
     /**
      * Grails application bean.
@@ -160,7 +108,9 @@ class JaxrsUtil {
         grailsApplication.mainContext.getBeansOfType(ResourceRegistrar).values().each {
             config.classes.addAll(it.getResourceClasses())
         }
+    }
 
+    void configureMappings() {
         List<String> mappings = retrieveMappingsList()
 
         if (log.isTraceEnabled()) {

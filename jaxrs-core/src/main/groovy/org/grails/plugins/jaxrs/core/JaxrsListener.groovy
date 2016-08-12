@@ -15,6 +15,9 @@
  */
 package org.grails.plugins.jaxrs.core
 
+import org.springframework.context.ApplicationContext
+import org.springframework.context.ApplicationContextAware
+
 import javax.servlet.ServletContextEvent
 import javax.servlet.ServletContextListener
 
@@ -23,12 +26,20 @@ import javax.servlet.ServletContextListener
  *
  * @author Martin Krasser
  */
-class JaxrsListener implements ServletContextListener {
+class JaxrsListener implements ServletContextListener, ApplicationContextAware {
+    ApplicationContext applicationContext
+
     void contextDestroyed(ServletContextEvent event) {
-        JaxrsUtil.getInstance(event.servletContext).getJaxrsContext().destroy()
+        jaxrsContext.destroy()
     }
 
     void contextInitialized(ServletContextEvent event) {
-        JaxrsUtil.getInstance(event.servletContext).getJaxrsContext().servletContext = event.servletContext
+        JaxrsContext context = jaxrsContext
+        context.setServletContext(event.getServletContext())
+        context.restart()
+    }
+
+    protected JaxrsContext getJaxrsContext() {
+        return applicationContext.getBean('jaxrsContext', JaxrsContext)
     }
 }
