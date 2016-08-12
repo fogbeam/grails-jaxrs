@@ -97,7 +97,9 @@ mechanism for implementing  RESTful web services.
     Closure doWithSpring() {
         { ->
             jaxrsListener(ServletListenerRegistrationBean) {
-                listener = bean(JaxrsListener)
+                listener = bean(JaxrsListener) { bean ->
+                    bean.autowire = true
+                }
                 order = Ordered.LOWEST_PRECEDENCE
             }
 

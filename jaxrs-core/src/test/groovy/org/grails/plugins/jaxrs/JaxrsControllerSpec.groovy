@@ -22,10 +22,12 @@ import org.grails.plugins.jaxrs.core.JaxrsServletConfig
 import org.grails.plugins.jaxrs.core.JaxrsUtil
 import org.grails.plugins.jaxrs.servlet.ServletFactory
 import org.springframework.mock.web.MockHttpServletResponse
+import org.springframework.mock.web.MockServletContext
 import spock.lang.Specification
 
 import javax.servlet.Servlet
 import javax.servlet.ServletConfig
+import javax.servlet.ServletContext
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -62,8 +64,11 @@ class JaxrsControllerSpec extends Specification {
             }
         }
 
+        ServletContext servletContext = new MockServletContext()
+
         jaxrsContext = new JaxrsContext()
         jaxrsContext.jaxrsServletFactory = servletFactory
+        jaxrsContext.servletContext = servletContext
         controller.jaxrsContext = jaxrsContext
 
         jaxrsUtil = new JaxrsUtil()

@@ -15,6 +15,7 @@
  */
 package org.grails.plugins.jaxrs.core
 
+import grails.core.GrailsApplication
 import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
 
@@ -28,12 +29,17 @@ import javax.servlet.ServletContextListener
  */
 class JaxrsListener implements ServletContextListener, ApplicationContextAware {
     ApplicationContext applicationContext
+    GrailsApplication grailsApplication
 
     void contextDestroyed(ServletContextEvent event) {
         jaxrsContext.destroy()
     }
 
     void contextInitialized(ServletContextEvent event) {
+        if (!isEnabled()) {
+            return
+        }
+
         JaxrsContext context = jaxrsContext
         context.setServletContext(event.getServletContext())
         context.restart()
@@ -41,5 +47,12 @@ class JaxrsListener implements ServletContextListener, ApplicationContextAware {
 
     protected JaxrsContext getJaxrsContext() {
         return applicationContext.getBean('jaxrsContext', JaxrsContext)
+    }
+
+    boolean isEnabled() {
+        if (getGrailsApplication().config.org.grails.jaxrs.enabled == false) {
+            return false
+        }
+        return true
     }
 }

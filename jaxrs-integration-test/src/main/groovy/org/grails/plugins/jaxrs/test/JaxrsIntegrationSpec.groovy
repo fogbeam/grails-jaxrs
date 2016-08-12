@@ -85,7 +85,7 @@ abstract class JaxrsIntegrationSpec extends Specification {
         jaxrsController.jaxrsContext = jaxrsContext
         jaxrsController.jaxrsUtil = jaxrsUtil
 
-        jaxrsContext.init()
+        jaxrsContext.restart()
     }
 
     /**

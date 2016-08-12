@@ -180,7 +180,7 @@ class JaxrsUtil {
      * @param method Path annotation assigned at the method level.
      * @return A compiled URL mapping.
      */
-    static String buildMappingFromPath(Path root, Path method) {
+    String buildMappingFromPath(Path root, Path method) {
         return "${root?.value() ?: ''}/${method?.value() ?: ''}"
             .replaceAll(/\/+/, '/').replaceAll(/\{[^}]*\}/, '*').replaceAll(/\/$/, '')
     }
@@ -203,7 +203,7 @@ class JaxrsUtil {
      * @param method Method to check.
      * @return Whether the given {@link Method} is a JAX-RS resource.
      */
-    static boolean isJaxrsResource(Method method) {
+    boolean isJaxrsResource(Method method) {
         for (Annotation annotation : method.getAnnotations()) {
             if (annotation.annotationType().getAnnotation(HttpMethod)) {
                 return true
