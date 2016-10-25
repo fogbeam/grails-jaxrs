@@ -6,7 +6,7 @@ class JaxrsIntegrationTestGrailsPlugin extends Plugin {
     /**
      * Version of Grails the plugin is meant for.
      */
-    def grailsVersion = "3.0.0 > *"
+    def grailsVersion = "3.0 > *"
 
     /**
      * Plugin title.

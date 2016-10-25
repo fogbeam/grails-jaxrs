@@ -78,7 +78,7 @@ mechanism for implementing  RESTful web services.
     /**
      * Documentation URL.
      */
-    def documentation = [url: 'https://budjb.github.io/grails-jaxrs/3.x/latest/']
+    def documentation = 'https://budjb.github.io/grails-jaxrs/3.x/latest/'
 
     /**
      * Issues URL.

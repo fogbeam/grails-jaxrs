@@ -6,7 +6,7 @@ class JaxrsJersey1GrailsPlugin extends Plugin {
     /**
      * Version of Grails the plugin is meant for.
      */
-    def grailsVersion = "3.0.0 > *"
+    def grailsVersion = "3.0 > *"
 
     /**
      * Plugin title.
@@ -31,7 +31,7 @@ class JaxrsJersey1GrailsPlugin extends Plugin {
     /**
      * URL to the plugin's documentation.
      */
-    def documentation = [url: 'https://budjb.github.io/grails-jaxrs/3.x/latest/']
+    def documentation = 'https://budjb.github.io/grails-jaxrs/3.x/latest/'
 
     /**
      * Project license.
