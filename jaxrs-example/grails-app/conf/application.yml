@@ -46,7 +46,6 @@ environments:
                 defaultTransactionIsolation: 2 # TRANSACTION_READ_COMMITTED
 
 ---
----
 grails:
     profile: web
     codegen:
@@ -121,8 +120,15 @@ endpoints:
     jmx:
         unique-names: true
 
+---
 org:
     grails:
         jaxrs:
             swagger:
                 resourcePackage: com.budjb
+                version: '1.0'
+                title: JAX-RS Example API
+                description: An example set of APIs using the JAX-RS and Grails integration.
+                contact: Bud Byrd
+                license: Apache 2.0
+                licenseUrl: https://www.apache.org/licenses/LICENSE-2.0

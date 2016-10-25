@@ -1,6 +1,7 @@
 package org.grails.plugins.jaxrs.swagger
 
 import grails.plugins.Plugin
+import grails.web.mapping.LinkGenerator
 import io.swagger.jaxrs.config.BeanConfig
 import org.grails.plugins.jaxrs.core.ScanningResourceRegistrar
 
@@ -68,11 +69,12 @@ class JaxrsSwaggerGrailsPlugin extends Plugin {
         { ->
             Map config = getSwaggerConfiguration()
 
+            String baseUrl = getBaseUrl(config)
+
             if (isPluginEnabled(config)) {
                 'swaggerConfig'(classFor(config.beanConfigClassName, BeanConfig)) { bean ->
                     bean.autowire = true
                     resourcePackage = config.resourcePackage
-                    basePath = config.basePath ?: ''
                     version = config.version ?: '1'
                     title = config.title ?: 'Unspecified'
                     description = config.description ?: ''
@@ -80,14 +82,23 @@ class JaxrsSwaggerGrailsPlugin extends Plugin {
                     license = config.license ?: ''
                     licenseUrl = config.licenseUrl ?: ''
                     scan = config.scan ?: true
+
+                    if (baseUrl) {
+                        URI uri = new URI(baseUrl)
+
+                        if (uri.port != -1) {
+                            host = "${uri.host}:${uri.port}"
+                        }
+                        else {
+                            host = uri.host
+                        }
+                        schemes = [uri.scheme]
+                        basePath = uri.path
+                    }
                 }
                 'swaggerResourceRegistrar'(ScanningResourceRegistrar, 'io.swagger.jaxrs.listing')
             }
         }
-    }
-
-    void onConfigChange(Map<String, Object> event) {
-        // TODO: actually effect change
     }
 
     /**
@@ -135,5 +146,24 @@ class JaxrsSwaggerGrailsPlugin extends Plugin {
         def enabled = configuration.enabled
 
         return !(enabled instanceof Boolean) || enabled
+    }
+
+    /**
+     * Returns the configured base URL, or null if one isn't set.
+     *
+     * Attempts to try <pre>grails.plugins.jaxrs.swagger.baseUrl</pre> first, and then
+     * attempts to try <pre>grails.serverURL</pre>.
+     *
+     * @param config
+     * @return
+     */
+    String getBaseUrl(Map config) {
+        String baseUrl = config.baseUrl ?: getConfig().grails.serverURL ?: null
+
+        if (baseUrl && baseUrl instanceof String) {
+            return baseUrl
+        }
+
+        return null
     }
 }
