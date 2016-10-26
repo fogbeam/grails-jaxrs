@@ -6,6 +6,7 @@ import grails.util.Metadata
 import io.swagger.jaxrs.config.BeanConfig
 import org.grails.config.NavigableMap
 import org.springframework.beans.factory.config.AbstractFactoryBean
+
 import static SwaggerInitializationUtil.*
 
 class BeanConfigFactoryBean extends AbstractFactoryBean<BeanConfig> implements GrailsApplicationAware {
@@ -35,6 +36,14 @@ class BeanConfigFactoryBean extends AbstractFactoryBean<BeanConfig> implements G
     @Override
     protected BeanConfig createInstance() throws Exception {
         NavigableMap swaggerConfig = getSwaggerConfiguration(grailsApplication)
+
+        if (!swaggerConfig) {
+            throw new IllegalStateException("the swagger configuration is missing")
+        }
+
+        if (!valueFor(String, swaggerConfig.resourcePackage)) {
+            throw new IllegalStateException("the swagger configuration requires a resourcePackage path")
+        }
 
         Class<?> clazz = classFor(valueFor(String, swaggerConfig.beanConfigClassName), BeanConfig)
         BeanConfig beanConfig = (BeanConfig) clazz.newInstance()

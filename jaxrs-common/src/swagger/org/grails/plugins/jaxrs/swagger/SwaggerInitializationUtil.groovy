@@ -10,17 +10,7 @@ abstract class SwaggerInitializationUtil {
      * @return Validated swagger configuration.
      */
     static NavigableMap getSwaggerConfiguration(GrailsApplication grailsApplication) {
-        NavigableMap data = grailsApplication.config.org.grails.jaxrs.swagger
-
-        if (!data) {
-            throw new IllegalStateException("the swagger configuration is missing")
-        }
-
-        if (!valueFor(String, data.resourcePackage)) {
-            throw new IllegalStateException("the swagger configuration requires a resourcePackage path")
-        }
-
-        return data
+        return (NavigableMap) grailsApplication.config.org.grails.jaxrs.swagger
     }
 
     /**
@@ -36,7 +26,7 @@ abstract class SwaggerInitializationUtil {
         fqcn = valueFor(String, fqcn)
 
         if (fqcn) {
-            return getClass().getClassLoader().loadClass(fqcn)
+            return Class.forName(fqcn)
         }
 
         return fallback
@@ -69,6 +59,6 @@ abstract class SwaggerInitializationUtil {
      * @return
      */
     static boolean isSwaggerEnabled(GrailsApplication grailsApplication) {
-        return valueFor(Boolean, getSwaggerConfiguration(grailsApplication).enabled, true)
+        return valueFor(Boolean, getSwaggerConfiguration(grailsApplication).enabled, false)
     }
 }

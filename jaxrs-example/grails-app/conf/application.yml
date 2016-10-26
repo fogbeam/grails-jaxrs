@@ -125,6 +125,7 @@ org:
     grails:
         jaxrs:
             swagger:
+                enabled: true
                 resourcePackage: com.budjb
                 version: '1.0'
                 title: JAX-RS Example API
