@@ -29,6 +29,7 @@ targetCompatibility = jdkCompatibility
 repositories {
     mavenLocal()
     maven { url "https://repo.grails.org/grails/core" }
+    maven { url "https://maven.restlet.com" }
 }
 
 dependencyManagement {

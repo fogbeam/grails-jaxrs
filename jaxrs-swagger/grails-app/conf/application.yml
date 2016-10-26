@@ -1,9 +1,0 @@
-grails:
-    profile: plugin
-    codegen:
-        defaultPackage: org.grails.plugins.jaxrs.swagger
-info:
-    app:
-        name: '@info.app.name@'
-        version: '@info.app.version@'
-        grailsVersion: '@info.app.grailsVersion@'

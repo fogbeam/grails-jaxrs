@@ -28,6 +28,7 @@ targetCompatibility = jdkCompatibility
 
 repositories {
     mavenLocal()
+    mavenCentral()
     maven { url "https://repo.grails.org/grails/core" }
 }
 
@@ -51,8 +52,16 @@ dependencies {
     compile project(':jaxrs-core')
     compile "com.sun.jersey.contribs:jersey-spring:$jerseyVersion"
     compile "com.sun.jersey:jersey-bundle:$jerseyVersion"
-
+    compile "io.swagger:swagger-jaxrs:1.5.10"
     testCompile project(':jaxrs-integration-test')
+}
+
+sourceSets {
+    main {
+        groovy {
+            srcDirs "${rootProject.projectDir}/jaxrs-common/src/swagger"
+        }
+    }
 }
 
 task wrapper(type: Wrapper) {

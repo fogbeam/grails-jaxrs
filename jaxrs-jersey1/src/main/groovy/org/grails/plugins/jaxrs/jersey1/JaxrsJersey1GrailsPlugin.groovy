@@ -1,6 +1,9 @@
 package org.grails.plugins.jaxrs.jersey1
 
 import grails.plugins.Plugin
+import org.grails.plugins.jaxrs.core.ScanningResourceRegistrar
+import org.grails.plugins.jaxrs.swagger.BeanConfigFactoryBean
+import org.grails.plugins.jaxrs.swagger.SwaggerInitializationUtil
 
 class JaxrsJersey1GrailsPlugin extends Plugin {
     /**
@@ -53,9 +56,18 @@ class JaxrsJersey1GrailsPlugin extends Plugin {
      *
      * @return
      */
-    Closure doWithSpring() {{ ->
-        jaxrsServletFactory(JerseyServletFactory) { bean ->
-            bean.autowire = true
+    Closure doWithSpring() {
+        { ->
+            jaxrsServletFactory(JerseyServletFactory) { bean ->
+                bean.autowire = true
+            }
+
+            if (SwaggerInitializationUtil.isSwaggerEnabled(grailsApplication)) {
+                'swaggerResourceRegistrar'(ScanningResourceRegistrar, 'io.swagger.jaxrs.listing')
+                'swaggerConfig'(BeanConfigFactoryBean) { bean ->
+                    bean.autowire = true
+                }
+            }
         }
-    }}
+    }
 }
