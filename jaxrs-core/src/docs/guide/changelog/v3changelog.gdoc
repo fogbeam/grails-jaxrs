@@ -1,3 +1,7 @@
+h3. Version 3.0.4
+* Integrate *Swagger* into the @jaxrs-jersey1@ plugin.
+* Introduce the @jaxrs-swagger-ui@ plugin.
+
 h3. Version 3.0.3
 * Added missing @jersey-client@ dependency for the *jersey1* plugin.\
   ([#25|https://github.com/budjb/grails-jaxrs/issues/25])

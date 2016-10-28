@@ -13,6 +13,7 @@ providers:
     jsonproviders: JSON Providers
     customproviders: Custom Providers
 configuration: Configuration
+swagger: Swagger Integration
 testing: Integration Testing
 advanced:
     title: Advanced Features
