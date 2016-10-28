@@ -1,7 +1,5 @@
 .idea/
 .gradle/
 build/
-.asscache/
 out/
-swagger4jaxrs/
-jaxrs-swagger-test/
+.asscache

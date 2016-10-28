@@ -1,12 +1,15 @@
 package org.grails.plugins.jaxrs.jersey1
 
 import grails.plugins.Plugin
+import org.grails.plugins.jaxrs.core.ScanningResourceRegistrar
+import org.grails.plugins.jaxrs.swagger.BeanConfigFactoryBean
+import org.grails.plugins.jaxrs.swagger.SwaggerInitializationUtil
 
 class JaxrsJersey1GrailsPlugin extends Plugin {
     /**
      * Version of Grails the plugin is meant for.
      */
-    def grailsVersion = "3.0.0 > *"
+    def grailsVersion = "3.0 > *"
 
     /**
      * Plugin title.
@@ -31,7 +34,7 @@ class JaxrsJersey1GrailsPlugin extends Plugin {
     /**
      * URL to the plugin's documentation.
      */
-    def documentation = [url: 'https://budjb.github.io/grails-jaxrs/3.x/latest/']
+    def documentation = 'https://budjb.github.io/grails-jaxrs/3.x/latest/'
 
     /**
      * Project license.
@@ -53,9 +56,18 @@ class JaxrsJersey1GrailsPlugin extends Plugin {
      *
      * @return
      */
-    Closure doWithSpring() {{ ->
-        jaxrsServletFactory(JerseyServletFactory) { bean ->
-            bean.autowire = true
+    Closure doWithSpring() {
+        { ->
+            jaxrsServletFactory(JerseyServletFactory) { bean ->
+                bean.autowire = true
+            }
+
+            if (SwaggerInitializationUtil.isSwaggerEnabled(grailsApplication)) {
+                'swaggerResourceRegistrar'(ScanningResourceRegistrar, 'io.swagger.jaxrs.listing')
+                'swaggerConfig'(BeanConfigFactoryBean) { bean ->
+                    bean.autowire = true
+                }
+            }
         }
-    }}
+    }
 }
