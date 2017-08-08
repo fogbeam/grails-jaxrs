@@ -56,9 +56,11 @@ grails.project.dependency.resolution = {
         // A modified version (with removed META-INF/services/javax.ws.rs.ext.RuntimeDelegate)
         // is contained in project's custom lib directory and repository. This is needed because of a bug described
         // at http://restlet.tigris.org/issues/show_bug.cgi?id=1251
+        /*
         provided group: 'org.restlet.gae',
                 name: 'org.restlet.ext.jaxrs-noruntimedel',
                 version: restletVersion
+        */
 
         compile("org.restlet.gae:org.restlet.ext.json:$restletVersion") {
             excludes 'org.restlet'

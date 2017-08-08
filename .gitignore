@@ -12,3 +12,7 @@ plugin.xml
 *~
 
 .settings
+.classpath
+.project
+*.iml
+.idea
