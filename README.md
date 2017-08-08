@@ -1,4 +1,6 @@
-#Grails JAX-RS Plugin
+[![Build Status](https://travis-ci.org/budjb/grails-jaxrs.svg?branch=grails-2.x)](https://travis-ci.org/budjb/grails-jaxrs)
+
+# Grails JAX-RS Plugin
 
 A [Grails](http://grails.org) plugin that supports the development of RESTful web services based on the [Java API for RESTful Web Services](http://jcp.org/en/jsr/detail?id=311) (JSR 311: JAX-RS).
 
