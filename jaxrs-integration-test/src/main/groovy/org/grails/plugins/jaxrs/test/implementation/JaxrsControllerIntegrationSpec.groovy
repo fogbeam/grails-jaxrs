@@ -15,16 +15,39 @@
  */
 package org.grails.plugins.jaxrs.test.implementation
 
+import org.grails.core.artefact.DomainClassArtefactHandler
+import grails.testing.mixin.integration.Integration
 import org.grails.plugins.jaxrs.test.JaxrsIntegrationSpec
 import org.grails.plugins.jaxrs.test.JaxrsRequestProperties
 import org.grails.plugins.jaxrs.test.implementation.resources.*
+import org.grails.plugins.jaxrs.test.implementation.support.TestPerson
 import spock.lang.Unroll
 
 /**
  * @author Noam Y. Tenne
  * @author Bud Byrd
+ * @author Alex Stoia
  */
+@Integration
 abstract class JaxrsControllerIntegrationSpec extends JaxrsIntegrationSpec {
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    void doExtraSetup() {
+        super.doExtraSetup()
+        def originalMethod = DomainClassArtefactHandler.metaClass.getMetaMethod("isDomainClass", Class)
+        DomainClassArtefactHandler.metaClass.'static'.isDomainClass = { Class<?> clazz ->
+            if (clazz.isAssignableFrom(TestPerson)) {
+                return true
+            } else {
+                originalMethod.invoke(delegate, clazz)
+            }
+
+        }
+    }
+
     /**
      * Return the list of resources to build the JAX-RS servlet with.
      *
