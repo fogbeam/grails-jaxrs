@@ -12,19 +12,3 @@ org:
     grails:
         jaxrs:
             enabled: false
-
-dataSource:
-    dbCreate: create-drop
-    pooled: true
-    jmxExport: true
-    driverClassName: org.h2.Driver
-    url: "jdbc:h2:mem:devDB"
-    username: sa
-    password:
-hibernate:
-    dialect: org.hibernate.dialect.H2Dialect
-    cache:
-        queries: false
-        use_second_level_cache: true
-        use_query_cache: false
-        region.factory_class: org.hibernate.cache.ehcache.EhCacheRegionFactory

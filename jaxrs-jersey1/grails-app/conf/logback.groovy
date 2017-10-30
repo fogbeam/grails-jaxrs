@@ -20,5 +20,4 @@ if (Environment.isDevelopmentMode() && targetDir) {
         }
     }
     logger("StackTrace", ERROR, ['FULL_STACKTRACE'], false)
-    logger("org.grails.datastore.gorm", DEBUG, ['FULL_STACKTRACE'], false)
 }
