@@ -59,7 +59,7 @@ dependencies {
     testRuntime "net.sourceforge.htmlunit:htmlunit:2.18"
 
     compile project(':jaxrs-core')
-    compile "io.swagger:swagger-jaxrs:1.5.10"
+    compile "io.swagger:swagger-jaxrs:1.5.16"
 }
 
 grailsPublish {
