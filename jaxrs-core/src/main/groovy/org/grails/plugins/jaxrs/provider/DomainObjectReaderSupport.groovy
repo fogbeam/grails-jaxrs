@@ -92,7 +92,7 @@ abstract class DomainObjectReaderSupport implements MessageBodyReader<Object>, G
         BindingResult result = DataBindingUtils.bindObjectToInstance(domainInstance, new InputStreamReader(entityStream, resolvedEncoding))
         if (result && result.hasErrors()) {
             // This should only happen if the json/xml input is invalid and NOT if the domain instance has errors.
-            String errMessage ="Failed to bind input to entity to domain ${domainInstance.getClass()}. " +
+            String errMessage = "Failed to bind input to entity to domain ${domainInstance.getClass()}. " +
                     "Got following errors:\n ${result.getAllErrors()}".toString()
             // Cannot use newer constructor taking the String message, due to jersey 1 depending on older jax-rs version
             throw new WebApplicationException(Response.serverError().entity(errMessage).build())
