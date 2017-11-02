@@ -151,6 +151,25 @@ abstract class JaxrsControllerIntegrationSpec extends JaxrsIntegrationSpec {
         data['name'].text() == 'semaj'
     }
 
+    def "Initiate a single round-trip on resource 04 for content type application/xml with invalid body"() {
+        when:
+        def response = makeRequest(new JaxrsRequestProperties(
+                uri: '/test/04/single',
+                method: 'POST',
+                contentType: 'application/xml',
+                accept: 'application/xml',
+                body: 'Invalid XML'.bytes
+        ))
+
+        then:
+        response.status == 500
+
+        def data = response.bodyAsString
+        data.contains('Failed to bind input to entity to domain class org.grails.plugins.jaxrs.test.implementation.support.TestPerson.')
+        data.contains('An error occurred parsing the body of the request')
+        data.contains('invalidRequestBody')
+    }
+
     def "Initiate a single round-trip on resource 04 for content type application/json"() {
         when:
         def response = makeRequest(new JaxrsRequestProperties(
