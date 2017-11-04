@@ -62,6 +62,9 @@ dependencies {
     compile "io.swagger:swagger-jaxrs:1.5.16"
 }
 
+// enable if you wish to package this plugin as a standalone application
+bootRepackage.enabled = false
+
 grailsPublish {
     githubSlug = publishGithubSlug
     repo = publishRepo

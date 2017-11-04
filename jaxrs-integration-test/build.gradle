@@ -64,6 +64,9 @@ dependencies {
     compile project(':jaxrs-core')
 }
 
+// enable if you wish to package this plugin as a standalone application
+bootRepackage.enabled = false
+
 grailsPublish {
     githubSlug = publishGithubSlug
     repo = publishRepo
