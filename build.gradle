@@ -1,7 +1,6 @@
 allprojects { project ->
     version = '3.0.4'
     group = 'org.grails.plugins'
-    project.buildDir = this.buildDir
 
     ext {
         publishGithubSlug = 'budjb/grails-jaxrs'
