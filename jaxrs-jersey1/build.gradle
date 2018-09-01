@@ -91,6 +91,17 @@ grailsPublish {
 }
 
 publishing {
+
+    repositories {
+        maven {
+            url "http://dev.fogbeam.org:8082/artifactory/fogbeam-main/"
+            credentials {
+                username "$artifactoryUsername"
+                password  "$artifactoryPassword"
+             }
+        }
+    }  
+
     publications {
         maven(MavenPublication) {
             pom.withXml {
